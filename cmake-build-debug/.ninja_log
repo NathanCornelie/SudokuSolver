@@ -1,0 +1,6 @@
+# ninja log v5
+0	455	1708426593965263259	CMakeFiles/testCPP.dir/main.cpp.o	f322450d746c8c40
+0	430	1708428017801939859	CMakeFiles/testCPP.dir/verifMethods.cpp.o	ee9a61e5d18b69e9
+1	437	1708437618780006221	CMakeFiles/testCPP.dir/tools.cpp.o	ad51ff0754e37650
+1	556	1708437618900006222	CMakeFiles/testCPP.dir/baseTechniques.cpp.o	46ef884faec1182c
+556	614	1708437618956672889	testCPP	9612d3deaaa5623e

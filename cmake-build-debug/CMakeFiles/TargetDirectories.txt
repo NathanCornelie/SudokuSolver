@@ -1,3 +1,0 @@
-/home/nathan/Bureau/project/perso/SudokuSolver/cmake-build-debug/CMakeFiles/testCPP.dir
-/home/nathan/Bureau/project/perso/SudokuSolver/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/nathan/Bureau/project/perso/SudokuSolver/cmake-build-debug/CMakeFiles/rebuild_cache.dir

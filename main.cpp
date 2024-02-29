@@ -1,9 +1,10 @@
-#include <iostream>
-#include "verifMethods.h"
+
+
 #include "baseTechniques.h"
+#include "solver.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+
     int grid[9][9] = {{8, 2, 3, 4, 5, 6, 7, 8, 9},
                       {4, 0, 6, 4, 5, 6, 7, 1, 9},
                       {7, 0, 9, 4, 5, 6, 7, 8, 9},
@@ -22,8 +23,8 @@ int main() {
                                  {0, 7, 0, 6, 0, 0, 0, 0, 1},
                                  {6, 8, 0, 0, 0, 0, 4, 0, 9},
                                  {2, 1, 9, 0, 0, 0, 0, 0, 8},
-                                 {0, 3, 0, 8, 9, 5, 1, 0, 2}};
+                                  {0, 3, 0, 8, 9, 5, 1, 0, 2}};
 
-    findSimpleNumber(correctEasyGrid, 1);
+    solver(correctEasyGrid);
     return 0;
 }

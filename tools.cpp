@@ -10,7 +10,7 @@ int copyGrid(int grid[9][9], int dest[9][9]) {
 
 void placeNumberInGrid(int grid[9][9], int row, int col, int num, bool verbose = false) {
     grid[row][col] = num;
-    if (verbose)std::cout << num << " placé en position" << row << "," << col << ";\n";
+    if (verbose)std::cout << num << " placé en position" << row << "," << col << ";";
 }
 
 bool isNumberInRow(int grid[9][9], int row, int number) {
@@ -39,6 +39,7 @@ bool isNumberInBloc(int grid[9][9], int bloc, int number) {
 }
 
 void fillEmptyPlacesInBloc(int grid[9][9], int bloc) {
+    // remplace tout les 0 par un 10 dans un ligne bloc
     const int rowStart = 3 * (bloc / 3);
     const int colStart = 3 * (bloc % 3);
     for (int row = rowStart; row <= rowStart + 2; row++) {
@@ -50,6 +51,7 @@ void fillEmptyPlacesInBloc(int grid[9][9], int bloc) {
 }
 
 void fillEmptyPlacesInRow(int grid[9][9], int row) {
+    // remplace tout les 0 par un 10 dans un ligne
     for (int col = 0; col < 9; col++) {
         if (grid[row][col] == 0) placeNumberInGrid(grid, row, col, 10);
     }
@@ -57,6 +59,7 @@ void fillEmptyPlacesInRow(int grid[9][9], int row) {
 }
 
 void fillEmptyPlacesInCol(int grid[9][9], int col) {
+    // remplace tout les 0 par un 10 dans un colonne
     for (int row = 0; row < 9; row++) {
         if (grid[row][col] == 0) placeNumberInGrid(grid, row, col, 10);
     }
@@ -64,5 +67,6 @@ void fillEmptyPlacesInCol(int grid[9][9], int col) {
 }
 
 int findBlocFromCoordinate(int row , int col){
+    //renvoie l'indice du bloc de la case en fonction des coordonnées de la case
     return 3*(row / 3)+(col/3);
 }

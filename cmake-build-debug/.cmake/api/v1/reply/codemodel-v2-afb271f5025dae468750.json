@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/nathan/Bureau/project/perso/SudokuSolver/cmake-build-debug",
-		"source" : "/home/nathan/Bureau/project/perso/SudokuSolver"
+		"build" : "/home/nathan/Bureau/project/SudokuSolver/cmake-build-debug",
+		"source" : "/home/nathan/Bureau/project/SudokuSolver"
 	},
 	"version" : 
 	{

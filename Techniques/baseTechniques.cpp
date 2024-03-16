@@ -67,7 +67,7 @@ void findSimpleNumber(int grid[9][9], int cible , int manquants[9]) {
             if (positionsDisponibles.size() == 1) {
 
                 if (!isNumberInBloc(copy, j, cible)) {
-                    placeNumberInGrid(copy, get<0>(positionsDisponibles.at(0)), get<1>(positionsDisponibles.at(0)), cible, false);
+                    placeNumberInGrid(copy, get<0>(positionsDisponibles.at(0)), get<1>(positionsDisponibles.at(0)), cible);
                     fillEmptyPlacesInBloc(copy, j);
                     fillEmptyPlacesInRow(copy,get<0>(positionsDisponibles.at(0)));
                     fillEmptyPlacesInCol(copy,get<1>(positionsDisponibles.at(0)));
@@ -83,7 +83,7 @@ void findSimpleNumber(int grid[9][9], int cible , int manquants[9]) {
                 if (positionsDisponibles.size() == 1) {
 
                     if (!isNumberInRow(copy, j, cible)) {
-                        placeNumberInGrid(copy, get<0>(positionsDisponibles.at(0)), get<1>(positionsDisponibles.at(0)), cible, false);
+                        placeNumberInGrid(copy, get<0>(positionsDisponibles.at(0)), get<1>(positionsDisponibles.at(0)), cible);
                         fillEmptyPlacesInRow(copy, j);
                         fillEmptyPlacesInCol(copy,get<1>(positionsDisponibles.at(0)));
                         fillEmptyPlacesInBloc(copy, findBlocFromCoordinate(j,get<1>(positionsDisponibles.at(0))));
@@ -99,7 +99,7 @@ void findSimpleNumber(int grid[9][9], int cible , int manquants[9]) {
                 if (positionsDisponibles.size() == 1) {
 
                     if (!isNumberInCol(copy, j, cible)) {
-                        placeNumberInGrid(copy, get<0>(positionsDisponibles.at(0)), get<1>(positionsDisponibles.at(0)), cible, false);
+                        placeNumberInGrid(copy, get<0>(positionsDisponibles.at(0)), get<1>(positionsDisponibles.at(0)), cible);
                         fillEmptyPlacesInCol(copy, j);
                         fillEmptyPlacesInRow(copy,get<0>(positionsDisponibles.at(0)));
                         fillEmptyPlacesInBloc(copy, findBlocFromCoordinate(get<0>(positionsDisponibles.at(0)), j));

@@ -1,12 +1,15 @@
 # ninja log v5
-1	516	1709170653585754062	CMakeFiles/sudokuSolver.dir/baseTechniques.cpp.o	e31347fe0e8d032c
-1	491	1709170354629074817	CMakeFiles/testCPP.dir/main.cpp.o	6b51c89bd87f36be
-1	525	1709170354665741485	CMakeFiles/testCPP.dir/solver.cpp.o	18b5071b0a55445e
-1	796	1709170328382407047	CMakeFiles/testCPP.dir/verifMethods.cpp.o	3812e09cd146d303
-1	366	1709170628899086356	CMakeFiles/sudokuSolver.dir/tools.cpp.o	86e3a50dec39fbab
-0	755	1709170393325743112	CMakeFiles/sudokuSolver.dir/verifMethods.cpp.o	f187a2d50b041222
-1	611	1709170328199073705	CMakeFiles/testCPP.dir/tools.cpp.o	599c6f7011c4d415
 516	566	1709170653635754063	sudokuSolver	a13b74a9e22294ba
 0	482	1709170492565747287	CMakeFiles/sudokuSolver.dir/main.cpp.o	6e9f3886ad7cbb7c
-1	591	1709170354732408155	CMakeFiles/testCPP.dir/baseTechniques.cpp.o	c32f5732e5f105d5
 1	470	1709170492552413953	CMakeFiles/sudokuSolver.dir/solver.cpp.o	a1881fe3b037e5a2
+2	382	1710618509943798647	CMakeFiles/sudokuSolver.dir/Techniques/singleNaked.cpp.o	65af5f125443a50a
+2	568	1710618510130465322	CMakeFiles/sudokuSolver.dir/Tools/tools.cpp.o	e1085bcf92a6590a
+1	714	1710618510277131995	CMakeFiles/sudokuSolver.dir/Tools/verifMethods.cpp.o	7774c4cb5624be13
+2	735	1710618510297131996	CMakeFiles/sudokuSolver.dir/solver.cpp.o	dbdc01e58651c8e8
+2	885	1710618510447132002	CMakeFiles/sudokuSolver.dir/Techniques/baseTechniques.cpp.o	3593280ca1ec5cc6
+1	505	1710618553643800601	CMakeFiles/sudokuSolver.dir/main.cpp.o	b9ec260232b99040
+505	562	1710618553700467271	sudokuSolver	9ee06ccf3bbdbc7b
+1	756	1710619889740526969	CMakeFiles/sudokuSolver.dir/solver.cpp.o	dbdc01e58651c8e8
+1	792	1710619889777193637	CMakeFiles/sudokuSolver.dir/Techniques/baseTechniques.cpp.o	3593280ca1ec5cc6
+1	823	1710619889810526971	CMakeFiles/sudokuSolver.dir/Techniques/singleNaked.cpp.o	65af5f125443a50a
+823	891	1710619889877193641	sudokuSolver	9ee06ccf3bbdbc7b

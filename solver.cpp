@@ -4,6 +4,8 @@
 #include "Tools/verifMethods.h"
 #include "solver.h"
 #include "Techniques/baseTechniques.h"
+#include "Techniques/singleNaked.h"
+
 
 void initManquants(int grid[9][9], int manquant[9]) {
     int finds[9];
@@ -22,12 +24,12 @@ void initManquants(int grid[9][9], int manquant[9]) {
 void solver(int grid[9][9]) {
     int nbrChiffreManquant[9];
     initManquants(grid, nbrChiffreManquant);
-
     while (!isGridValid(grid)) {
         for (int i = 0; i < 9; ++i) {
 
             if(nbrChiffreManquant[i])
-                findSimpleNumber(grid, i+1,nbrChiffreManquant);
+                //findSimpleNumber(grid, i+1,nbrChiffreManquant);
+                findSingleNaked(grid);
         }
     }
 }

@@ -2,7 +2,9 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
-#include "tools.h"
+#include "../Tools/tools.h"
+#include "baseTechniques.h"
+
 
 using namespace std;
 

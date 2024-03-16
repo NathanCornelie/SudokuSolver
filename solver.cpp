@@ -1,9 +1,9 @@
 //
 // Created by nathan on 24/02/24.
 //
-#include "verifMethods.h"
+#include "Tools/verifMethods.h"
 #include "solver.h"
-#include "baseTechniques.h"
+#include "Techniques/baseTechniques.h"
 
 void initManquants(int grid[9][9], int manquant[9]) {
     int finds[9];

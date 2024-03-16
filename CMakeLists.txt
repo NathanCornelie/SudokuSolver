@@ -4,11 +4,13 @@ project(sudokuSolver)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(sudokuSolver main.cpp
-        verifMethods.cpp
-        verifMethods.h
-        baseTechniques.cpp
-        baseTechniques.h
-        tools.cpp
-        tools.h
+        Tools/verifMethods.cpp
+        Tools/verifMethods.h
+        Techniques/baseTechniques.cpp
+        Techniques/baseTechniques.h
+        Tools/tools.cpp
+        Tools/tools.h
         solver.cpp
-        solver.h)
+        solver.h
+        Techniques/singleNaked.cpp
+        Techniques/singleNaked.h)

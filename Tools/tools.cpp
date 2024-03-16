@@ -1,4 +1,6 @@
 #include <iostream>
+#include "tools.h"
+
 
 int copyGrid(int grid[9][9], int dest[9][9]) {
     for (int col = 0; col < 9; col++)
@@ -8,7 +10,7 @@ int copyGrid(int grid[9][9], int dest[9][9]) {
     return 1;
 }
 
-void placeNumberInGrid(int grid[9][9], int row, int col, int num, bool verbose = false) {
+void placeNumberInGrid(int grid[9][9], int row, int col, int num, bool verbose) {
     grid[row][col] = num;
     if (verbose)std::cout << num << " placé en position" << row << "," << col << ";";
 }

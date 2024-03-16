@@ -1,6 +1,6 @@
 
 
-#include "baseTechniques.h"
+#include "techniques/baseTechniques.h"
 #include "solver.h"
 
 int main() {

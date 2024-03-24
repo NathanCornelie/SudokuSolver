@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void findSingleNaked(int grid[9][9]) {
+void findSingleNaked(int grid[9][9],bool numberPlaced) {
     unordered_set<int> manquants(9);
     unordered_set<int> presents;
 
@@ -30,12 +30,12 @@ void findSingleNaked(int grid[9][9]) {
                 int indiceBloc = findBlocFromCoordinate(i, j);
                 unordered_set<int> possibles = manquants;
                 for (auto itr = possibles.begin();itr!= possibles.end();) {
-                    if (i == 6) std::cout << possibles.size() << "\n";
                     if (isNumberInBloc(grid, indiceBloc, *itr) || isNumberInCol(grid, j, *itr))itr = possibles.erase(itr);
                     else++itr;
                 }
                 if (possibles.size() == 1) {
                     placeNumberInGrid(grid, i, j, *possibles.begin(), true);
+                    numberPlaced=true;
                     std::cout << "Single Naked \n";
                 }
 

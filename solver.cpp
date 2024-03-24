@@ -24,14 +24,16 @@ void initManquants(int grid[9][9], int manquant[9]) {
 void solver(int grid[9][9]) {
     int nbrChiffreManquant[9];
     initManquants(grid, nbrChiffreManquant);
-    findSingleNaked(grid);
-//    while (!isGridValid(grid)) {
-//        for (int i = 0; i < 9; ++i) {
-//
-//            if(nbrChiffreManquant[i]) {
-//                //findSimpleNumber(grid, i + 1, nbrChiffreManquant);
-//
-//            }
-//        }
-//    }
+    bool numberPlaced = false;
+    while (!isGridValid(grid)) {
+        for (int i = 0; i < 9; ++i) {
+
+            if(nbrChiffreManquant[i]) {
+                findSimpleNumber(grid, i + 1, nbrChiffreManquant,numberPlaced);
+            }
+        }
+        if(!numberPlaced){
+            findSingleNaked(grid,numberPlaced);
+        }
+    }
 }

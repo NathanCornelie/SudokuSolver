@@ -39,7 +39,7 @@ vector<tuple<int, int>> findPlacesInCol(int grid[9][9], int col) {
     return findPositions;
 }
 
-void findSimpleNumber(int grid[9][9], int cible , int manquants[9]) {
+void findSimpleNumber(int grid[9][9], int cible , int manquants[9],bool &numberPlaced) {
     // trouve et place tout les occurence de la cible plaçable dans la grille
     int copy[9][9];
     copyGrid(grid, copy);
@@ -76,6 +76,7 @@ void findSimpleNumber(int grid[9][9], int cible , int manquants[9]) {
                 if (!isNumberInBloc(grid, j, cible)) {
                     placeNumberInGrid(grid, get<0>(positionsDisponibles.at(0)), get<1>(positionsDisponibles.at(0)),
                                       cible, true);
+                    numberPlaced  = true;
                     manquants[cible - 1]--;
                 } cout << " (bloc) \n";
             }
@@ -92,6 +93,7 @@ void findSimpleNumber(int grid[9][9], int cible , int manquants[9]) {
                     if (!isNumberInRow(grid, j, cible)) {
                         placeNumberInGrid(grid, get<0>(positionsDisponibles.at(0)), get<1>(positionsDisponibles.at(0)),
                                           cible, true);
+                        numberPlaced = true;
                          manquants[cible - 1]--;
                     } cout << " (row)\n";
                 }
@@ -108,6 +110,7 @@ void findSimpleNumber(int grid[9][9], int cible , int manquants[9]) {
                     if (!isNumberInCol(grid, j, cible)) {
                         placeNumberInGrid(grid, get<0>(positionsDisponibles.at(0)), get<1>(positionsDisponibles.at(0)),
                                           cible, true);
+                        numberPlaced=true;
                         manquants[cible - 1]--;
                     }
                     cout << " (col)\n";

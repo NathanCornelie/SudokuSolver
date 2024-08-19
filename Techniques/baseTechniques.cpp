@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <tuple>
 #include "../Tools/tools.h"
 #include "baseTechniques.h"
 
@@ -77,8 +78,8 @@ void findSimpleNumber(int grid[9][9], int cible , int manquants[9],bool &numberP
                     placeNumberInGrid(grid, get<0>(positionsDisponibles.at(0)), get<1>(positionsDisponibles.at(0)),
                                       cible, true);
                     numberPlaced  = true;
-                    manquants[cible - 1]--;
-                } cout << " (bloc) \n";
+                    manquants[cible - 1]--;cout << " (bloc) \n";
+                } 
             }
             positionsDisponibles = findPlacesInRow(copy, j);
                 if (positionsDisponibles.size() == 1) {

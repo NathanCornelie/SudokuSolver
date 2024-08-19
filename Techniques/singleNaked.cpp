@@ -23,7 +23,7 @@ void findSingleNaked(int grid[9][9],bool numberPlaced) {
         }
 
         for (int j = 0; j < 9; ++j) {
-            if(!presents.contains(j))manquants.insert(j);
+            if(!presents.count(j))manquants.insert(j);
         }
         for (int j = 0; j < 9; ++j) { // <- parcours des cases de la ligne
             if (!grid[i][j]) {

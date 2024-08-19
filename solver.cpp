@@ -31,9 +31,10 @@ void solver(int grid[9][9]) {
             if(nbrChiffreManquant[i]) {
                 findSimpleNumber(grid, i + 1, nbrChiffreManquant,numberPlaced);
             }
-        }
-        if(!numberPlaced){
+            if(!numberPlaced){
             findSingleNaked(grid,numberPlaced);
         }
+        }
+        
     }
 }

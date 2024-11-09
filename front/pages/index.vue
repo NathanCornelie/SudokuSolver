@@ -8,7 +8,9 @@
       brute force, but rather a step-by-step resolution using classic Sudoku
       techniques.
     </p>
-    <v-btn class="mt-4"> SOLVER </v-btn>
+    <v-btn class="mt-4 bg-pink-lighten-3">
+      <nuxt-link to="solver"> SOLVER</nuxt-link>
+    </v-btn>
   </v-card>
 </template>
 
@@ -20,5 +22,12 @@
 }
 p {
   text-align: center;
+}
+a {
+  text-decoration: none;
+  color: black;
+}
+button:hover {
+  cursor: pointer;
 }
 </style>

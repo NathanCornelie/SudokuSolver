@@ -1,3 +1,0 @@
-/home/nathan/dev/mine/SudokuSolver/CMakeFiles/sudokuSolver.dir
-/home/nathan/dev/mine/SudokuSolver/CMakeFiles/edit_cache.dir
-/home/nathan/dev/mine/SudokuSolver/CMakeFiles/rebuild_cache.dir

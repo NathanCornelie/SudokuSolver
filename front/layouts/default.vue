@@ -9,7 +9,7 @@
 <style>
 #app {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
   width: 100vw;
   height: 100vh;

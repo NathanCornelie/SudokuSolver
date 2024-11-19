@@ -5,8 +5,9 @@ import (
 )
 
 // findSingleNaked identifies and places numbers when only one possibility exists in a row.
-func FindSingleNaked(grid *Grid, numberPlaced *bool, solutions []Solution, one bool) []Solution {
+func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 	var row int8
+	var solutions []ResponseSolution
 	for row = 0; row < 9; row++ {
 		manquants := make(map[int8]struct{}, 9)
 		presents := make(map[int8]struct{}, 9)
@@ -47,11 +48,10 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool, solutions []Solution, one b
 					for num := range possibles {
 						grid.Grid[row][col] = num
 						*numberPlaced = true
-						if one {
-							solutions = append(solutions, Solution{num, row, col, "singleNaked", ""})
-							return solutions
-						}
 						fmt.Println("Single Naked")
+
+						solutions = append(solutions, ResponseSolution{Solution{num, row, col, "Single Naked", ""}, CreateCopy(grid)})
+
 					}
 				}
 			}

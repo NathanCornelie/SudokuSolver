@@ -76,9 +76,9 @@ func FillEmptyPlacesInRow(grid *Grid, row int8) {
 }
 
 // FindSimpleNumber Finds and places a given number if it has a unique spot in a block, row, or column.
-func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *bool, solutions []Solution, one bool) []Solution {
+func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *bool) []ResponseSolution {
 	var copy = CreateCopy(grid)
-
+	var solutions []ResponseSolution
 	// Mark cells where the target number cannot go
 	for col := 0; col < 9; col++ {
 		for row := 0; row < 9; row++ {
@@ -112,12 +112,10 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 					grid.Grid[row][col] = cible
 					*numberPlaced = true
 					manquants[cible-1]--
-
-					solutions = append(solutions, Solution{cible, row, col, "base", "bloc"})
 					fmt.Printf("%d placed in position %d,%d (bloc)\n", cible, row, col)
-					if one {
-						return solutions
-					}
+
+					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "base", "bloc"}, CreateCopy(grid)})
+
 				}
 			}
 
@@ -135,11 +133,10 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 					grid.Grid[row][col] = cible
 					*numberPlaced = true
 					manquants[cible-1]--
-					solutions = append(solutions, Solution{cible, row, col, "base", "row"})
 					fmt.Printf("%d placed in position %d,%d (row)\n", cible, row, col)
-					if one {
-						return solutions
-					}
+
+					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "base", "row"}, CreateCopy(grid)})
+
 				}
 			}
 
@@ -156,11 +153,9 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 					grid.Grid[row][col] = cible
 					*numberPlaced = true
 					manquants[cible-1]--
-					solutions = append(solutions, Solution{cible, row, col, "base", "col"})
 					fmt.Printf("%d placed in position %d,%d (col)\n", cible, row, col)
-					if one {
-						return solutions
-					}
+					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "base", "col"}, CreateCopy(grid)})
+
 				}
 			}
 		}

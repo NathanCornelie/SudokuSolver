@@ -1,5 +1,5 @@
 <template>
-  <v-card class="container my-7 py-5" scrollable>
+  <v-card class="container my-7 pb-5" scrollable>
     <v-virtual-scroll height="360" class="pa-5" :items="[1]">
       <template v-slot:default="item">
         <v-row dense>

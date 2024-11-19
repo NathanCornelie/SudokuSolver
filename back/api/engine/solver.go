@@ -15,25 +15,29 @@ func InitManquants(grid *Grid, manquant *[9]int8) {
 	}
 }
 
-// solver attempts to solve the Sudoku grid using various strategies.
-func Solver(grid *Grid, old_solutions []Solution, one bool) []Solution {
+func Solver(grid *Grid, one bool) []ResponseSolution {
 	nbrChiffreManquant := [9]int8{}
 	InitManquants(grid, &nbrChiffreManquant)
-	solutions := []Solution{}
+	solutions := []ResponseSolution{}
+	var solution ResponseSolution
 	numberPlaced := false
 	var i int8
-	for i = 0; i < 9; i++ {
-		if nbrChiffreManquant[i] > 0 {
-			solutions = FindSimpleNumber(grid, i+1, &nbrChiffreManquant, &numberPlaced, solutions, one)
-
-			if one && len(solutions) > 0 {
-				return solutions
+	for j := 0; j < 9; j++ {
+		for i = 0; i < 9; i++ {
+			numberPlaced = false
+			if nbrChiffreManquant[i] > 0 {
+				solutions = append(solutions, FindSimpleNumber(grid, i+1, &nbrChiffreManquant, &numberPlaced)...)
+				if one && numberPlaced && len(solutions) > 0 {
+					solutions = append(solutions, solution)
+					return solutions
+				}
 			}
-		}
-		if !numberPlaced {
-			solutions = FindSingleNaked(grid, &numberPlaced, solutions, one)
-			if one && len(solutions) > 0 {
-				return solutions
+			if !numberPlaced {
+				solutions = append(solutions, FindSingleNaked(grid, &numberPlaced)...)
+				if one && numberPlaced && len(solutions) > 0 {
+					solutions = append(solutions, solution)
+					return solutions
+				}
 			}
 		}
 	}

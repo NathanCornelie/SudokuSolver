@@ -35,6 +35,7 @@
       <div class="mt-5 d-flex align-center justify-space-around">
         <v-btn @click="handleSolve()">View Solution</v-btn>
         <v-btn @click="handleGetOneSolution">Next Solution</v-btn>
+        <v-btn @click="handleGetAllSolution">All Solutions</v-btn>
       </div>
     </div>
 
@@ -88,6 +89,21 @@ const handleGetOneSolution = async () => {
       selectedCase.value = {
         row: solution.solution.row,
         col: solution.solution.col,
+      };
+    }
+  }
+};const handleGetAllSolution = async () => {
+  if (displayed_grid.value) {
+    const resp = await SolverAPI.getAllSolutions(
+      new Grid(displayed_grid.value.grid)
+    );
+    
+    if (resp) {
+      solutions.value=resp; 
+      displayed_grid.value = new Grid(resp[-1].grid.grid);
+      selectedCase.value = {
+        row: resp[-1].solution.row,
+        col: resp[-1].solution.col,
       };
     }
   }

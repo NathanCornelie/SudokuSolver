@@ -15,7 +15,7 @@ func main() {
 	router.POST("/is_correct", engine.IsGridCorrectAPI)
 	router.POST("/getsolution", engine.OneSolutionAPI)
 	router.POST("/solve", engine.SolveAPI)
-	router.POST("/getsolutions", engine.AllMoovesAPI)
+	router.POST("/getallsolutions", engine.AllMoovesAPI)
 	router.POST("/all_next_moooves", engine.AllNextMoovesAPI)
 
 	router.Run("localhost:8080")

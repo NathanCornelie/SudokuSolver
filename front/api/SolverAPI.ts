@@ -29,5 +29,18 @@ export default abstract class {
       
       return json ? (json as Solution) : null;
     }
+  }static async getAllSolutions(grid: Grid): Promise<Solution[] | null> {
+    const res = await fetch(`${useAppConfig().apiURL}/getallsolutions`, {
+      method: "POST",
+      body: JSON.stringify(grid),
+    });
+
+    const json = await res.json();
+    if (json.error) {
+      throw new Error(json.error.message);
+    } else {
+      
+      return json ? (json as Solution[]) : null;
+    }
   }
 }

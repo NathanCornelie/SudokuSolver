@@ -73,19 +73,37 @@ func OneSolutionAPI(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, resp)
 		return
 	}
-	var solutions []Solution
-	solutions = Solver(&grid, solutions, true)
+	solutions := Solver(&grid, true)
 
 	if len(solutions) > 0 {
 
-		c.JSON(http.StatusOK, ResponseSolution{solutions[0], grid})
+		c.JSON(http.StatusOK, solutions[0])
 	} else {
-		c.JSON(http.StatusInternalServerError, "no solution founded")
+		c.JSON(http.StatusOK, solutions)
 	}
 
 }
 func AllMoovesAPI(c *gin.Context) {
-	return
+	var grid Grid
+	if err := c.BindJSON(&grid); err != nil {
+		print(err)
+		c.JSON(http.StatusBadRequest, ResponseSolve{false, grid.Grid, "Invalid grid"})
+		return
+	}
+
+	resp := IsGridValueCorrect(&grid)
+	if !resp.Success {
+		c.JSON(http.StatusBadRequest, resp)
+		return
+	}
+	solutions := Solver(&grid, false)
+
+	if len(solutions) > 0 {
+
+		c.JSON(http.StatusOK, solutions)
+	} else {
+		c.JSON(http.StatusOK, solutions)
+	}
 }
 func AllNextMoovesAPI(c *gin.Context) {
 	return

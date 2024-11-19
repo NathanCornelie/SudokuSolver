@@ -95,15 +95,8 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 
 				}
 				bloc := 3*(row/3) + (col / 3)
-				if row == 3 && col == 8 {
-					print(bloc)
-				}
 				FillEmptyPlacesInBloc(&copy, bloc)
-				if bloc == 5 {
-					print("nathan")
-					print(copy.Grid[0][8])
-					print(copy.Grid[5][6])
-				}
+
 			}
 		}
 	}

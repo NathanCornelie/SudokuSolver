@@ -48,8 +48,8 @@ func FillEmptyPlacesInBloc(grid *Grid, bloc int8) {
 
 	rowStart := 3 * (bloc / 3)
 	colStart := 3 * (bloc % 3)
-	for row := rowStart; row < rowStart+2; row++ {
-		for col := colStart; col < colStart+2; col++ {
+	for row := rowStart; row < rowStart+3; row++ {
+		for col := colStart; col < colStart+3; col++ {
 			if grid.Grid[row][col] == 0 {
 				grid.Grid[row][col] = 10
 			}
@@ -80,8 +80,10 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 	var copy = CreateCopy(grid)
 	var solutions []ResponseSolution
 	// Mark cells where the target number cannot go
-	for col := 0; col < 9; col++ {
-		for row := 0; row < 9; row++ {
+	var row int8
+	var col int8
+	for col = 0; col < 9; col++ {
+		for row = 0; row < 9; row++ {
 			if copy.Grid[row][col] == cible {
 				for ind := 0; ind < 9; ind++ {
 					if copy.Grid[row][ind] == 0 {
@@ -90,6 +92,17 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 					if copy.Grid[ind][col] == 0 {
 						copy.Grid[ind][col] = 10 // Mark the cell as unavailable
 					}
+
+				}
+				bloc := 3*(row/3) + (col / 3)
+				if row == 3 && col == 8 {
+					print(bloc)
+				}
+				FillEmptyPlacesInBloc(&copy, bloc)
+				if bloc == 5 {
+					print("nathan")
+					print(copy.Grid[0][8])
+					print(copy.Grid[5][6])
 				}
 			}
 		}

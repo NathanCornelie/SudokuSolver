@@ -15,31 +15,38 @@
             dense
           >
             <v-col v-for="(value, j) in row">
-              <div
+              <v-card :elevation="getElevation(i,j)"
                 :class="[
-                  'cell',
+                  'cell',getBaseRedBg(i, j),
                   j == 3 || j == 6 ? 'cell-separator' : '',
                   i == selectedCase.row && j == selectedCase.col
                     ? 'selected_case'
                     : '',
+                  
+                  getBaseRedBg(i, j),
                 ]"
-
-                @click="handleSetSelectedCase(i,j)"
+                @click="handleSetSelectedCase(i, j)"
               >
                 <p>{{ value }}</p>
-              </div>
+              </v-card>
             </v-col>
           </v-row>
         </v-container>
       </v-card>
       <div class="mt-5 d-flex align-center justify-space-around">
         <v-btn @click="handleSolve()">View Solution</v-btn>
-        <v-btn @click="handleGetOneSolution">Next Solution</v-btn>
-        <v-btn @click="handleGetAllSolution">All Solutions</v-btn>
+        <v-btn @click="handleGetNextSolution">Next Solution</v-btn>
+        <v-btn @click="handleGetAllSolutions">All Solutions</v-btn>
       </div>
     </div>
 
-    <Solutions :solutions="solutions ? solutions : []" text="hello" />
+    <Solutions
+      :solutions="solutions ? solutions : []"
+      :selected-solution-index="selectedSolutionIndex"
+      text="hello"
+      @select-solution="handleSelectSolutuion"
+      @change-selected-solution="handleChangeSelectedSolutionIndex"
+    />
   </v-card>
 </template>
 
@@ -51,6 +58,8 @@ import Solution from "~/models/Solution";
 const base_grid = ref<Grid>();
 const displayed_grid = ref<Grid>();
 const solutions = ref<Solution[]>([]);
+const selectedSolutionIndex = ref<number>(0);
+const selectedSolution = ref<Solution>();
 const selectedCase = ref<{ row: number; col: number }>({ row: 0, col: 0 });
 const data_grid = ref<number[][]>([
   [5, 3, 0, 0, 7, 0, 0, 0, 0],
@@ -76,42 +85,94 @@ const handleSolve = async () => {
     }
   }
 };
-const handleGetOneSolution = async () => {
+const handleGetNextSolution = async () => {
   if (displayed_grid.value) {
     const solution = await SolverAPI.getOneSolution(
       new Grid(displayed_grid.value.grid)
     );
-    console.log(solution);
     if (solution) {
       solutions.value?.push(solution);
-      console.log(solution.grid);
       displayed_grid.value = new Grid(solution.grid.grid);
       selectedCase.value = {
         row: solution.solution.row,
         col: solution.solution.col,
       };
+      handleSelectSolutuion(solution)
     }
   }
-};const handleGetAllSolution = async () => {
+};
+const handleChangeSelectedSolutionIndex = (value: number) => {
+  selectedSolutionIndex.value = value;
+  selectedSolution.value = solutions.value[selectedSolutionIndex.value];
+};
+const getBlocFromCase = (row: number, col: number) => {
+  return 3 * ((row / 3) >> 0) + ((col / 3) >> 0);
+};
+
+const getElevation = (row:number,col:number)=>{
+  if(selectedSolution.value && selectedSolution.value.solution.row == row && selectedSolution.value.solution.col == col) return 5
+  return 0
+}
+
+const getBaseRedBg = (row: number, col: number) => {
+  if (
+    displayed_grid.value?.grid[row][col] ==
+    selectedSolution.value?.solution.value
+  ) {
+    return "red_bg";
+  } else {
+    if (displayed_grid.value?.grid[row][col] == 0) {
+      if (selectedSolution.value?.solution.type == "bloc") {
+        if (
+          getBlocFromCase(row, col) ==
+          getBlocFromCase(
+            selectedSolution.value.solution.row,
+            selectedSolution.value.solution.col
+          )
+        ) {
+          return "red_bg";
+        }
+      }
+      if (selectedSolution.value?.solution.type == "row") {
+        if (row == selectedSolution.value.solution.row) {
+          return "red_bg";
+        }
+      }
+      if (selectedSolution.value?.solution.type == "col") {
+        if (col == selectedSolution.value.solution.col) {
+          return "red_bg";
+        }
+      }
+    }
+  }
+  return "";
+};
+const handleGetAllSolutions = async () => {
   if (displayed_grid.value) {
     const resp = await SolverAPI.getAllSolutions(
       new Grid(displayed_grid.value.grid)
     );
-    
+
     if (resp) {
-      solutions.value=resp; 
-      displayed_grid.value = new Grid(resp[-1].grid.grid);
+      solutions.value = resp;
+      
+      displayed_grid.value = new Grid(resp[resp.length-1].grid.grid);
       selectedCase.value = {
-        row: resp[-1].solution.row,
-        col: resp[-1].solution.col,
+        row: resp[resp.length-1].solution.row,
+        col: resp[resp.length-1].solution.col,
       };
+      if (solutions.value.length) handleSelectSolutuion(solutions.value[1]);
     }
   }
 };
-const handleSetSelectedCase =(row :number,col: number)=>{
-  selectedCase.value.row = row
-  selectedCase.value.col = col
-}
+const handleSetSelectedCase = (row: number, col: number) => {
+  selectedCase.value.row = row;
+  selectedCase.value.col = col;
+};
+const handleSelectSolutuion = (sol: Solution) => {
+  selectedSolution.value = sol;
+  selectedCase.value = { row: sol.solution.row, col: sol.solution.col };
+};
 </script>
 
 <style>
@@ -135,7 +196,14 @@ const handleSetSelectedCase =(row :number,col: number)=>{
 }
 
 .selected_case {
-  background-color: #d1c4e9;
-  border: 2px solid #7e57c2;
+  background-color: #d1c4e9 !important;
+  border: 2px solid  rgba(68, 0, 255, 0.349);
+}
+
+.blue_bg {
+  background-color: rgba(46, 116, 247, 0.651);
+}
+.red_bg {
+  background-color: rgba(255, 0, 0, 0.349);
 }
 </style>

@@ -22,7 +22,6 @@ func IsListEmpty(list *[9]int8) bool {
 	fmt.Printf("\nnathan\n")
 	var k int8
 	for k = 0; k < 9; k++ {
-		fmt.Printf("%d", list[k])
 		if list[k] != 0 {
 			return false
 		}
@@ -49,21 +48,18 @@ func Solver(grid *Grid, one bool) []ResponseSolution {
 						solutions = append(solutions, solution)
 						return solutions
 					}
-					// if !numberPlaced {
-					// 	solutions = append(solutions, FindSingleNaked(grid, &numberPlaced)...)
-					// 	if one && numberPlaced && len(solutions) > 0 {
-					// 		solutions = append(solutions, solution)
-					// 		return solutions
-					// 	}
-					// }
+					if !numberPlaced {
+						solutions = append(solutions, FindSingleNaked(grid, &numberPlaced)...)
+						if one && numberPlaced && len(solutions) > 0 {
+							solutions = append(solutions, solution)
+							return solutions
+						}
+					}
 				}
 
 			}
 		}
-		var k int8
-		for k = 0; k < 9; k++ {
-			fmt.Printf("%d", nbrChiffreManquant[k])
-		}
+
 		if oldNbrChiffreManquant == nbrChiffreManquant {
 			return solutions
 		}

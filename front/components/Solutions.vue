@@ -3,10 +3,13 @@
     <v-virtual-scroll height="360" class="pa-5" :items="[1]">
       <template v-slot:default>
         <v-row dense>
-          <v-col cols="6" v-for="sol in Props.solutions">
+          <v-col cols="6" v-for="(sol,i) in Props.solutions">
             <v-card
+              :elevation="selectedSolutionIndex == i ? 5 : 0"
               style="height: 70px"
-              class="solution px-4 py-2"
+              :class="['solution',' px-4',' py-2',
+                selectedSolutionIndex == i ? 'selectedSolution': ''
+              ]"
               @click="$emit('selectSolution', sol)"
               ><h3>{{ sol.solution.method }}_{{ sol.solution.type }}</h3>
               <p>
@@ -44,10 +47,10 @@ const emit = defineEmits<{
   (e: "changeSelectedSolution", index: number): void;
 }>();
 const changeSelectedSolution = (sens: number) => {
-  if (sens > 0)
-    if (Props.selectedSolutionIndex < Props.solutions.length ) {
+  if (sens > 0){if (Props.selectedSolutionIndex < Props.solutions.length-1 ) {
       emit("changeSelectedSolution", Props.selectedSolutionIndex + 1);
-    } else {
+    }0}
+     else {
       if (Props.selectedSolutionIndex > 0) {
         emit("changeSelectedSolution", Props.selectedSolutionIndex - 1);
       }
@@ -55,7 +58,7 @@ const changeSelectedSolution = (sens: number) => {
 };
 </script>
 
-<style lang="scss">
+<style lang="postcss">
 .container {
   min-height: 300px;
   width: 80%;
@@ -65,7 +68,7 @@ const changeSelectedSolution = (sens: number) => {
   border: 1px solid #d1c4e9;
 }
 .selectedSolution{
-   background-color: #d1c4e9 !important;
+   background-color: #ffffff71 !important;
   
 }
 </style>

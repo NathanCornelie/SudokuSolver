@@ -92,6 +92,7 @@ const handleGetNextSolution = async () => {
     );
     if (solution) {
       solutions.value?.push(solution);
+      selectedSolutionIndex.value = solutions.value.length -1
       displayed_grid.value = new Grid(solution.grid.grid);
       selectedCase.value = {
         row: solution.solution.row,
@@ -104,6 +105,7 @@ const handleGetNextSolution = async () => {
 const handleChangeSelectedSolutionIndex = (value: number) => {
   selectedSolutionIndex.value = value;
   selectedSolution.value = solutions.value[selectedSolutionIndex.value];
+  handleSelectSolutuion(solutions.value[value])
 };
 const getBlocFromCase = (row: number, col: number) => {
   return 3 * ((row / 3) >> 0) + ((col / 3) >> 0);
@@ -161,7 +163,8 @@ const handleGetAllSolutions = async () => {
         row: resp[resp.length-1].solution.row,
         col: resp[resp.length-1].solution.col,
       };
-      if (solutions.value.length) handleSelectSolutuion(solutions.value[1]);
+      selectedSolutionIndex.value = resp.length-1
+      if (solutions.value.length) handleSelectSolutuion(solutions.value[solutions.value.length -1 ]);
     }
   }
 };
@@ -172,6 +175,8 @@ const handleSetSelectedCase = (row: number, col: number) => {
 const handleSelectSolutuion = (sol: Solution) => {
   selectedSolution.value = sol;
   selectedCase.value = { row: sol.solution.row, col: sol.solution.col };
+  displayed_grid.value = new Grid(sol.grid.grid);
+
 };
 </script>
 

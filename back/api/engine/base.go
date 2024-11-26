@@ -85,15 +85,8 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 	for col = 0; col < 9; col++ {
 		for row = 0; row < 9; row++ {
 			if copy.Grid[row][col] == cible {
-				for ind := 0; ind < 9; ind++ {
-					if copy.Grid[row][ind] == 0 {
-						copy.Grid[row][ind] = 10 // Mark the cell as unavailable
-					}
-					if copy.Grid[ind][col] == 0 {
-						copy.Grid[ind][col] = 10 // Mark the cell as unavailable
-					}
-
-				}
+				FillEmptyPlacesInRow(&copy, row)
+				FillEmptyPlacesInCol(&copy, col)
 				bloc := 3*(row/3) + (col / 3)
 				FillEmptyPlacesInBloc(&copy, bloc)
 
@@ -110,8 +103,8 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 				if !IsNumberInBloc(&copy, j, cible) {
 					copy.Grid[row][col] = cible
 					FillEmptyPlacesInBloc(&copy, j)
-					FillEmptyPlacesInCol(&copy, j)
-					FillEmptyPlacesInRow(&copy, j)
+					FillEmptyPlacesInCol(&copy, col)
+					FillEmptyPlacesInRow(&copy, row)
 
 				}
 				if !IsNumberInBloc(grid, j, cible) {
@@ -130,9 +123,9 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 				row, col := positionsDisponibles[0].row, positionsDisponibles[0].col
 				if !IsNumberInRow(&copy, i, cible) {
 					copy.Grid[row][col] = cible
-					FillEmptyPlacesInBloc(&copy, j)
-					FillEmptyPlacesInCol(&copy, j)
-					FillEmptyPlacesInRow(&copy, j)
+					FillEmptyPlacesInBloc(&copy, FindBlocFromCoordinate(row, col))
+					FillEmptyPlacesInCol(&copy, col)
+					FillEmptyPlacesInRow(&copy, row)
 				}
 				if !IsNumberInRow(grid, i, cible) {
 
@@ -151,9 +144,9 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 				row, col := positionsDisponibles[0].row, positionsDisponibles[0].col
 				if !IsNumberInCol(&copy, i, cible) {
 					copy.Grid[row][col] = cible
-					FillEmptyPlacesInBloc(&copy, j)
-					FillEmptyPlacesInCol(&copy, j)
-					FillEmptyPlacesInRow(&copy, j)
+					FillEmptyPlacesInBloc(&copy, FindBlocFromCoordinate(row, col))
+					FillEmptyPlacesInCol(&copy, col)
+					FillEmptyPlacesInRow(&copy, row)
 				}
 				if !IsNumberInCol(grid, i, cible) {
 					grid.Grid[row][col] = cible

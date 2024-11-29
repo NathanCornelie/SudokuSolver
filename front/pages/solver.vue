@@ -8,7 +8,7 @@
         <v-btn>Edit grid</v-btn>
       </div>
       <v-card class="mb-5">
-        <v-container>
+        <v-container id="solutions-container">
           <v-row
             v-for="(row, i) in displayed_grid?.grid"
             :class="[i == 3 || i == 6 ? 'row-separator' : '']"
@@ -92,20 +92,17 @@ const handleGetNextSolution = async () => {
     );
     if (solution) {
       solutions.value?.push(solution);
-      selectedSolutionIndex.value = solutions.value.length -1
       displayed_grid.value = new Grid(solution.grid.grid);
       selectedCase.value = {
         row: solution.solution.row,
         col: solution.solution.col,
       };
-      handleSelectSolutuion(solution)
+      handleSelectSolutuion(solution,solutions.value.length -1)
     }
   }
 };
-const handleChangeSelectedSolutionIndex = (value: number) => {
-  selectedSolutionIndex.value = value;
-  selectedSolution.value = solutions.value[selectedSolutionIndex.value];
-  handleSelectSolutuion(solutions.value[value])
+const handleChangeSelectedSolutionIndex = (value: number) => {  
+  handleSelectSolutuion(solutions.value[value],value)
 };
 const getBlocFromCase = (row: number, col: number) => {
   return 3 * ((row / 3) >> 0) + ((col / 3) >> 0);
@@ -163,8 +160,7 @@ const handleGetAllSolutions = async () => {
         row: resp[resp.length-1].solution.row,
         col: resp[resp.length-1].solution.col,
       };
-      selectedSolutionIndex.value = resp.length-1
-      if (solutions.value.length) handleSelectSolutuion(solutions.value[solutions.value.length -1 ]);
+      if (solutions.value.length) handleSelectSolutuion(solutions.value[solutions.value.length -1 ],resp.length-1);
     }
   }
 };
@@ -172,11 +168,11 @@ const handleSetSelectedCase = (row: number, col: number) => {
   selectedCase.value.row = row;
   selectedCase.value.col = col;
 };
-const handleSelectSolutuion = (sol: Solution) => {
+const handleSelectSolutuion = (sol: Solution,index : number) => {
   selectedSolution.value = sol;
   selectedCase.value = { row: sol.solution.row, col: sol.solution.col };
   displayed_grid.value = new Grid(sol.grid.grid);
-
+  selectedSolutionIndex.value = index
 };
 </script>
 

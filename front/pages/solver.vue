@@ -15,14 +15,16 @@
             dense
           >
             <v-col v-for="(value, j) in row">
-              <v-card :elevation="getElevation(i,j)"
+              <v-card
+                :elevation="getElevation(i, j)"
                 :class="[
-                  'cell',getBaseRedBg(i, j),
+                  'cell',
+                  getBaseRedBg(i, j),
                   j == 3 || j == 6 ? 'cell-separator' : '',
                   i == selectedCase.row && j == selectedCase.col
                     ? 'selected_case'
                     : '',
-                  
+
                   getBaseRedBg(i, j),
                 ]"
                 @click="handleSetSelectedCase(i, j)"
@@ -60,6 +62,7 @@ const displayed_grid = ref<Grid>();
 const solutions = ref<Solution[]>([]);
 const selectedSolutionIndex = ref<number>(0);
 const selectedSolution = ref<Solution>();
+const singleNakedColorationPositions = ref<{ row: number; col: number }[]>([]);
 const selectedCase = ref<{ row: number; col: number }>({ row: 0, col: 0 });
 const data_grid = ref<number[][]>([
   [5, 3, 0, 0, 7, 0, 0, 0, 0],
@@ -97,54 +100,100 @@ const handleGetNextSolution = async () => {
         row: solution.solution.row,
         col: solution.solution.col,
       };
-      handleSelectSolutuion(solution,solutions.value.length -1)
+      handleSelectSolutuion(solution, solutions.value.length - 1);
     }
   }
 };
-const handleChangeSelectedSolutionIndex = (value: number) => {  
-  handleSelectSolutuion(solutions.value[value],value)
+const isValueInCol = (value: number, col: number) => {
+  for (let i = 0; i < 9; i++) {
+    if (displayed_grid.value?.grid[i][col] == value) {
+      return true;
+    }
+  }
+  return false;
+};
+const isValueInRow = (value: number, row: number) => {
+  for (let i = 0; i < 9; i++) {
+    if (displayed_grid.value?.grid[row][i] == value) {
+      return true;
+    }
+  }
+  return false;
+};
+const handleChangeSelectedSolutionIndex = (value: number) => {
+  handleSelectSolutuion(solutions.value[value], value);
 };
 const getBlocFromCase = (row: number, col: number) => {
   return 3 * ((row / 3) >> 0) + ((col / 3) >> 0);
 };
 
-const getElevation = (row:number,col:number)=>{
-  if(selectedSolution.value && selectedSolution.value.solution.row == row && selectedSolution.value.solution.col == col) return 5
-  return 0
-}
+const getElevation = (row: number, col: number) => {
+  if (
+    selectedSolution.value &&
+    selectedSolution.value.solution.row == row &&
+    selectedSolution.value.solution.col == col
+  )
+    return 5;
+  return 0;
+};
 
 const getBaseRedBg = (row: number, col: number) => {
-  if (
-    displayed_grid.value?.grid[row][col] ==
-    selectedSolution.value?.solution.value
-  ) {
-    return "red_bg";
+  if (selectedSolution.value?.solution.method == "base") {
+    const color = colorationBase(row, col);
+    if (color) return color;
   } else {
-    if (displayed_grid.value?.grid[row][col] == 0) {
-      if (selectedSolution.value?.solution.type == "bloc") {
-        if (
-          getBlocFromCase(row, col) ==
-          getBlocFromCase(
-            selectedSolution.value.solution.row,
-            selectedSolution.value.solution.col
-          )
-        ) {
-          return "red_bg";
+    const color = colorationSingleNaked(row, col);
+    if (color) return color;
+  }
+
+  return "";
+};
+const colorationBase = (row: number, col: number) => {
+  if (selectedSolution.value?.solution.type == "bloc") {
+    const bloc = getBlocFromCase(
+      selectedSolution.value?.solution.row,
+      selectedSolution.value?.solution.col
+    );
+    const rowStart = 3 * Math.floor(bloc / 3);
+    const colStart = 3 * (bloc % 3);
+    if (selectedSolution.value.solution.type == "bloc")
+      if (
+        rowStart < row &&
+        row <= rowStart + 2 &&
+        isValueInRow(selectedSolution.value.solution.value, row)
+      ) {
+        for (let i = colStart; i < colStart + 3; i++) {
+          if (displayed_grid.value?.grid[row][i] == 0) return "red_bg";
         }
       }
-      if (selectedSolution.value?.solution.type == "row") {
-        if (row == selectedSolution.value.solution.row) {
-          return "red_bg";
-        }
+    if (
+      colStart < col &&
+      col <= colStart + 2 &&
+      isValueInCol(selectedSolution.value.solution.value, col)
+    )
+      for (let i = rowStart; i < rowStart + 3; i++) {
+        if (displayed_grid.value?.grid[i][col] == 0) return "red_bg";
       }
-      if (selectedSolution.value?.solution.type == "col") {
-        if (col == selectedSolution.value.solution.col) {
-          return "red_bg";
-        }
-      }
+
+    return "";
+  }
+};
+
+const colorationSingleNaked = (row: number, col: number) => {
+  if (
+    displayed_grid.value?.grid[row][col] 
+    
+  ) {
+    if (
+      singleNakedColorationPositions.value.find(
+        
+        (e) => (e.col == col && e.row == row)
+      )
+    ) {
+
+      return "red_bg";
     }
   }
-  return "";
 };
 const handleGetAllSolutions = async () => {
   if (displayed_grid.value) {
@@ -154,13 +203,17 @@ const handleGetAllSolutions = async () => {
 
     if (resp) {
       solutions.value = resp;
-      
-      displayed_grid.value = new Grid(resp[resp.length-1].grid.grid);
+
+      displayed_grid.value = new Grid(resp[resp.length - 1].grid.grid);
       selectedCase.value = {
-        row: resp[resp.length-1].solution.row,
-        col: resp[resp.length-1].solution.col,
+        row: resp[resp.length - 1].solution.row,
+        col: resp[resp.length - 1].solution.col,
       };
-      if (solutions.value.length) handleSelectSolutuion(solutions.value[solutions.value.length -1 ],resp.length-1);
+      if (solutions.value.length)
+        handleSelectSolutuion(
+          solutions.value[solutions.value.length - 1],
+          resp.length - 1
+        );
     }
   }
 };
@@ -168,12 +221,72 @@ const handleSetSelectedCase = (row: number, col: number) => {
   selectedCase.value.row = row;
   selectedCase.value.col = col;
 };
-const handleSelectSolutuion = (sol: Solution,index : number) => {
+const handleSelectSolutuion = (sol: Solution, index: number) => {
   selectedSolution.value = sol;
   selectedCase.value = { row: sol.solution.row, col: sol.solution.col };
   displayed_grid.value = new Grid(sol.grid.grid);
-  selectedSolutionIndex.value = index
+  selectedSolutionIndex.value = index;
 };
+watch(
+  selectedSolutionIndex,
+
+  (value) => {
+    singleNakedColorationPositions.value=[]
+    if (selectedSolution.value?.solution.method == "Single Naked") {
+      const grid = displayed_grid.value?.grid;
+      const row = selectedSolution.value.solution.row;
+      const col = selectedSolution.value.solution.col;
+      let copy: number[] = [];
+      for (let i = 1; i < 10; i++) {
+        if (i != selectedSolution.value.solution.value) {
+          copy.push(i);
+        }
+      }
+      for (let i = 0; i < 9; i++) {
+        if (
+          grid &&
+          grid[i][col] > 0 &&
+          copy.indexOf(grid[i][col]) > -1 &&
+          copy.find((e) => e == grid[i][col])
+        ) {
+         
+          singleNakedColorationPositions.value.push({ row: i, col });
+          copy = copy.filter((e) => e != grid[i][col]);
+        }
+        if (
+          grid &&
+          grid[row][i] > 0 &&
+          copy.indexOf(grid[row][i]) > -1 &&
+          copy.find((e) => e == grid[row][i])
+        ) {
+         
+          singleNakedColorationPositions.value.push({ row, col: i });
+          copy = copy.filter((e) => e != grid[row][i]);
+        }
+      }
+      if (copy.length) {
+        const bloc = getBlocFromCase(row, col);
+        const rowStart = 3 * Math.floor(bloc / 3);
+        const colStart = 3 * (bloc % 3);
+        for (let i = colStart; i < colStart + 3; i++) {
+          for (let j = rowStart; j < rowStart + 3; j++) {
+            if (
+              copy.length&&
+          grid &&
+          grid[j][i] > 0 &&
+          copy.indexOf(grid[j][i]) > -1 &&
+          copy.find((e) => e == grid[j][i])
+        ) {
+          
+          singleNakedColorationPositions.value.push({ row:j, col: i });
+          copy = copy.filter((e) => e != grid[j][i]);
+        }
+          }
+        }
+      }
+    }
+  }
+);
 </script>
 
 <style>
@@ -198,7 +311,7 @@ const handleSelectSolutuion = (sol: Solution,index : number) => {
 
 .selected_case {
   background-color: #d1c4e9 !important;
-  border: 2px solid  rgba(68, 0, 255, 0.349);
+  border: 2px solid rgba(68, 0, 255, 0.349);
 }
 
 .blue_bg {

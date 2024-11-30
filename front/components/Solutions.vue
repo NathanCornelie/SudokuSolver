@@ -7,30 +7,29 @@
       id="solutions-container"
       ref="container-ref"
     >
-      
-        <v-row dense>
-          <v-col cols="6" v-for="(sol, i) in Props.solutions">
-            <v-card
-            :ref="ref=>cardsRef[i]=ref"
-              :elevation="selectedSolutionIndex == i ? 5 : 0"
-              style="height: 70px"
-              :class="[
-                'solution',
-                ' px-4',
-                ' py-2',
-                selectedSolutionIndex == i ? 'selectedSolution' : '',
-              ]"
-              @click="$emit('selectSolution', sol,i)"
-              ><h3>{{ sol.solution.method }}_{{ sol.solution.type }}</h3>
-              <p>
-                <span class="mr-2">ligne {{ sol.solution.row + 1 }}</span
-                ><span class="mr-2">ligne {{ sol.solution.col + 1 }}</span
-                ><span>valeur {{ sol.solution.value }}</span>
-              </p>
-            </v-card>
-          </v-col>
-        </v-row>
-      
+      <v-row dense>
+        <v-col cols="6" v-for="(sol, i) in Props.solutions">
+          <v-card
+            :ref="(ref) => (cardsRef[i] = ref)"
+            :id="`h-${i}`"
+            :elevation="selectedSolutionIndex == i ? 5 : 0"
+            style="height: 70px"
+            :class="[
+              'solution',
+              ' px-4',
+              ' py-2',
+              selectedSolutionIndex == i ? 'selectedSolution' : '',
+            ]"
+            @click="$emit('selectSolution', sol, i)"
+            ><h3>{{ sol.solution.method }}_{{ sol.solution.type }}</h3>
+            <p>
+              <span class="mr-2">ligne {{ sol.solution.row + 1 }}</span
+              ><span class="mr-2">ligne {{ sol.solution.col + 1 }}</span
+              ><span>valeur {{ sol.solution.value }}</span>
+            </p>
+          </v-card>
+        </v-col>
+      </v-row>
     </div>
 
     <div class="w-100 d-flex justify-center ga-3 mt-3">
@@ -55,10 +54,10 @@ const Props = defineProps<{
   selectedSolutionIndex: number;
   text: String;
 }>();
-const cardsRef: HTMLElement[] =[]
-const containerRef   =useTemplateRef("container-ref")
+const cardsRef: HTMLElement[] = [];
+const containerRef = useTemplateRef("container-ref");
 const emit = defineEmits<{
-  (e: "selectSolution", solution: Solution,index:number): void;
+  (e: "selectSolution", solution: Solution, index: number): void;
   (e: "changeSelectedSolution", index: number): void;
 }>();
 const changeSelectedSolution = (sens: number) => {
@@ -77,11 +76,23 @@ const changeSelectedSolution = (sens: number) => {
 watch(
   () => Props.selectedSolutionIndex,
   (value) => {
-    goTo(cardsRef[value], {
-      container:containerRef.value|| "#solutions-container",
-      offset:-110,
+    if(value == Props.solutions.length-1){
+      setTimeout(function(){
+      goTo(cardsRef[value]||`#h-${value}`, {
+      container: containerRef.value || "#solutions-container",
+      offset: -110,
       easing: "easeInQuint",
     });
+}, 500);
+    }else{
+    
+    goTo(cardsRef[value]||`#h-${value}`, {
+      container: containerRef.value || "#solutions-container",
+      offset: -110,
+      easing: "easeInQuint",
+    });
+  }
+
   }
 );
 </script>

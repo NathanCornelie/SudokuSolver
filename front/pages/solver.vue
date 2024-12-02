@@ -120,6 +120,16 @@ const isValueInRow = (value: number, row: number) => {
   }
   return false;
 };
+const isvalueInBloc = (value: number, bloc: number) => {
+  const rowStart = 3 * Math.floor(bloc / 3);
+  const colStart = 3 * (bloc % 3);
+  for (let i = colStart; i < colStart + 3; i++) {
+    for (let j = rowStart; j < rowStart + 3; j++) {
+      if (displayed_grid.value?.grid[j][i] == value) return true;
+    }
+  }
+  return false;
+};
 const handleChangeSelectedSolutionIndex = (value: number) => {
   handleSelectSolutuion(solutions.value[value], value);
 };
@@ -158,8 +168,9 @@ const colorationBase = (row: number, col: number) => {
     const colStart = 3 * (bloc % 3);
     if (selectedSolution.value.solution.type == "bloc")
       if (
-        rowStart < row &&
+        rowStart <= row &&
         row <= rowStart + 2 &&
+        row != selectedSolution.value.solution.row &&
         isValueInRow(selectedSolution.value.solution.value, row)
       ) {
         for (let i = colStart; i < colStart + 3; i++) {
@@ -167,8 +178,9 @@ const colorationBase = (row: number, col: number) => {
         }
       }
     if (
-      colStart < col &&
+      colStart <= col &&
       col <= colStart + 2 &&
+      col != selectedSolution.value.solution.col &&
       isValueInCol(selectedSolution.value.solution.value, col)
     )
       for (let i = rowStart; i < rowStart + 3; i++) {
@@ -177,20 +189,140 @@ const colorationBase = (row: number, col: number) => {
 
     return "";
   }
+  if (selectedSolution.value?.solution.type == "col") {
+    const blocStart = selectedSolution.value.solution.row % 3;
+    for (let b = blocStart; b <= blocStart + 2; b++) {
+      const bloc = 3 * Math.floor(b / 3) + blocStart;
+      console.log;
+      if (isvalueInBloc(selectedSolution.value.solution.value, bloc)) {
+        if (
+          getBlocFromCase(
+            selectedSolution.value.solution.row,
+            selectedSolution.value.solution.col
+          ) != bloc
+        ) {
+          const rowStart = 3 * Math.floor(bloc / 3);
+          const colStart = 3 * (bloc % 3);
+          let isRowFull = true;
+          for (let i = colStart; i <= colStart + 2; i++) {
+            if (
+              displayed_grid.value?.grid[selectedSolution.value.solution.row][
+                i
+              ] == 0
+            )
+              isRowFull = false;
+          }
+          if (
+            !isRowFull &&
+            rowStart <= row &&
+            row <= rowStart + 2 &&
+            colStart <= col &&
+            col <= colStart + 2
+          )
+            return "red_bg";
+        }
+      } else {
+        if (
+          row != selectedSolution.value.solution.row &&
+          isValueInRow(selectedSolution.value.solution.value, row) &&
+          displayed_grid.value?.grid[row][
+            selectedSolution.value.solution.col
+          ] == 0
+        )
+          return "red_bg";
+      }
+    }
+  }
+  if (selectedSolution.value?.solution.type == "row") {
+    const blocStart = 3 * Math.floor(selectedSolution.value.solution.row / 3);
+    for (let b = blocStart; b <= blocStart + 2; b++) {
+      if (isvalueInBloc(selectedSolution.value.solution.value, b)) {
+        if (
+          getBlocFromCase(
+            selectedSolution.value.solution.row,
+            selectedSolution.value.solution.col
+          ) != b
+        ) {
+          const rowStart = 3 * Math.floor(b / 3);
+          const colStart = 3 * (b % 3);
+          let isRowFull = true;
+          for (let i = colStart; i <= colStart + 2; i++) {
+            if (
+              displayed_grid.value?.grid[selectedSolution.value.solution.row][
+                i
+              ] == 0
+            )
+              isRowFull = false;
+          }
+          if (
+            !isRowFull &&
+            rowStart <= row &&
+            row <= rowStart + 2 &&
+            colStart <= col &&
+            col <= colStart + 2
+          )
+            return "red_bg";
+        }
+      } else {
+        if (
+          col != selectedSolution.value.solution.col &&
+          isValueInCol(selectedSolution.value.solution.value, col) &&
+          displayed_grid.value?.grid[selectedSolution.value.solution.row][
+            col
+          ] == 0
+        )
+          return "red_bg";
+      }
+    }
+  }
 };
 
 const colorationSingleNaked = (row: number, col: number) => {
-  if (
-    displayed_grid.value?.grid[row][col] 
-    
-  ) {
+  let last_col = true;
+  let last_row = true;
+  let last_bloc = true;
+  if (selectedSolution.value?.solution.type == "") {
     if (
-      singleNakedColorationPositions.value.find(
-        
-        (e) => (e.col == col && e.row == row)
+      getBlocFromCase(row, col) ==
+      getBlocFromCase(
+        selectedSolution.value.solution.row,
+        selectedSolution.value.solution.col
       )
     ) {
+      if (isvalueInBloc(0, getBlocFromCase(row, col))) last_bloc = false;
+      if (last_bloc) return "red_bg";
+    }
+  }
+  if (
+    selectedSolution.value?.solution.type == "col" &&
+    col == selectedSolution.value?.solution.col
+  ) {
+    for (let i = 0; i < 9; i++) {
+      if (displayed_grid.value?.grid[i][col] == 0) last_col = false;
+    }
+    if (last_col) {
+      return "red_bg";
+    }
+  }
+  if (
+    selectedSolution.value?.solution.type == "row" &&
+    row == selectedSolution.value?.solution.row
+  ) {
+    for (let i = 0; i < 9; i++) {
+      if (displayed_grid.value?.grid[row][i] == 0) last_row = false;
+    }
+    if (last_row) {
+      return "red_bg";
+    }
+  }
 
+  if (!last_row || !last_col || !last_bloc || selectedSolution.value?.solution.type == "") {
+    if (
+      displayed_grid.value?.grid[row][col] &&
+      singleNakedColorationPositions.value.find(
+        (e) => e.col == col && e.row == row
+      )
+    ) {
       return "red_bg";
     }
   }
@@ -203,7 +335,6 @@ const handleGetAllSolutions = async () => {
 
     if (resp) {
       solutions.value = resp;
-
       displayed_grid.value = new Grid(resp[resp.length - 1].grid.grid);
       selectedCase.value = {
         row: resp[resp.length - 1].solution.row,
@@ -231,56 +362,102 @@ watch(
   selectedSolutionIndex,
 
   (value) => {
-    singleNakedColorationPositions.value=[]
+    singleNakedColorationPositions.value = [];
     if (selectedSolution.value?.solution.method == "Single Naked") {
       const grid = displayed_grid.value?.grid;
       const row = selectedSolution.value.solution.row;
       const col = selectedSolution.value.solution.col;
       let copy: number[] = [];
+      let copyRef: number[] = [];
+
       for (let i = 1; i < 10; i++) {
-        if (i != selectedSolution.value.solution.value) {
-          copy.push(i);
+        if (i != selectedSolution.value.solution.value) copyRef.push(i);
+      }
+      if (selectedSolution.value.solution.type == "") {
+        const bloc = getBlocFromCase(row, col);
+        for (let j = 1; j < 10; j++) {
+          if (j != selectedSolution.value.solution.value) {
+            copy.push(j);
+          }
+        }
+        for (let i = 0; i < 9; i++) {
+          const rowStart = 3 * Math.floor(bloc / 3);
+          const colStart = 3 * (bloc % 3);
+          let j = rowStart + Math.floor(i / 3);
+          let k = colStart + (i % 3);
+          if (
+            copy.length &&
+            grid &&
+            grid[j][k] > 0 &&
+            copy.find((e) => e == grid[j][k])
+          ) {
+            singleNakedColorationPositions.value.push({ row: j, col: k });
+            copy = copy.filter((e) => e != grid[j][k]);
+          }
+        }
+        for (let i = 0; i < 9; i++) {
+          if (copy.length) {
+            if (
+              grid &&
+              grid[row][i] > 0 &&
+              copy.find((e) => e == grid[row][i])
+            ) {
+              singleNakedColorationPositions.value.push({ row, col: i });
+              copy = copy.filter((e) => e != grid[row][i]);
+            }
+          }
+        }
+        for (let i = 0; i < 9; i++) {
+          if (copy.length) {
+            if (
+              grid &&
+              grid[i][col] > 0 &&
+              copy.find((e) => e == grid[i][col])
+            ) {
+              singleNakedColorationPositions.value.push({ row: i, col });
+              copy = copy.filter((e) => e != grid[i][col]);
+            }
+          }
         }
       }
       for (let i = 0; i < 9; i++) {
-        if (
-          grid &&
-          grid[i][col] > 0 &&
-          copy.indexOf(grid[i][col]) > -1 &&
-          copy.find((e) => e == grid[i][col])
-        ) {
-         
-          singleNakedColorationPositions.value.push({ row: i, col });
-          copy = copy.filter((e) => e != grid[i][col]);
-        }
-        if (
-          grid &&
-          grid[row][i] > 0 &&
-          copy.indexOf(grid[row][i]) > -1 &&
-          copy.find((e) => e == grid[row][i])
-        ) {
-         
-          singleNakedColorationPositions.value.push({ row, col: i });
-          copy = copy.filter((e) => e != grid[row][i]);
-        }
-      }
-      if (copy.length) {
-        const bloc = getBlocFromCase(row, col);
-        const rowStart = 3 * Math.floor(bloc / 3);
-        const colStart = 3 * (bloc % 3);
-        for (let i = colStart; i < colStart + 3; i++) {
-          for (let j = rowStart; j < rowStart + 3; j++) {
+        if (selectedSolution.value.solution.type == "col") {
+          for (let j = 1; j < 10; j++) {
             if (
-              copy.length&&
-          grid &&
-          grid[j][i] > 0 &&
-          copy.indexOf(grid[j][i]) > -1 &&
-          copy.find((e) => e == grid[j][i])
-        ) {
-          
-          singleNakedColorationPositions.value.push({ row:j, col: i });
-          copy = copy.filter((e) => e != grid[j][i]);
+              j != selectedSolution.value.solution.value &&
+              !isValueInRow(j, selectedSolution.value.solution.row)
+            ) {
+              copy.push(j);
+            }
+          }
+          if (
+            grid &&
+            grid[i][col] > 0 &&
+            copy.indexOf(grid[i][col]) > -1 &&
+            copy.find((e) => e == grid[i][col])
+          ) {
+            singleNakedColorationPositions.value.push({ row: i, col });
+            copy = copy.filter((e) => e != grid[i][col]);
+          }
         }
+
+        if (selectedSolution.value.solution.type == "row") {
+          for (let k = 1; k < 10; k++) {
+            if (
+              k != selectedSolution.value.solution.value &&
+              !isValueInCol(k, selectedSolution.value.solution.col)
+            ) {
+              copy.push(k);
+            }
+          }
+          if (
+            grid &&
+            grid[row][i] > 0 &&
+            copy.indexOf(grid[row][i]) > -1 &&
+            copy.find((e) => e == grid[row][i])
+          ) {
+            singleNakedColorationPositions.value.push({ row, col: i });
+            copy = copy.filter((e) => e != grid[row][i]);
           }
         }
       }

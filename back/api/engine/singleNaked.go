@@ -30,7 +30,16 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 			if grid.Grid[row][col] == 0 {
 				indiceBloc := FindBlocFromCoordinate(row, col)
 				possibles := make(map[int8]struct{})
+				if len(manquants) == 1 {
+					for num := range manquants {
+						grid.Grid[row][col] = num
+						*numberPlaced = true
+						fmt.Println("Single Naked")
 
+						solutions = append(solutions, ResponseSolution{Solution{num, row, col, "Single Naked", "row"}, CreateCopy(grid)})
+
+					}
+				}
 				// Copy manquants into possibles
 				var num int8
 				for num = range manquants {
@@ -39,21 +48,40 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 
 				// Remove numbers that are already in the block or column
 				for num := range possibles {
-					if IsNumberInBloc(grid, indiceBloc, num) || IsNumberInCol(grid, col, num) {
+
+					if IsNumberInCol(grid, col, num) {
 						delete(possibles, num)
 					}
 				}
-
 				if len(possibles) == 1 {
 					for num := range possibles {
 						grid.Grid[row][col] = num
 						*numberPlaced = true
 						fmt.Println("Single Naked")
 
-						solutions = append(solutions, ResponseSolution{Solution{num, row, col, "Single Naked", ""}, CreateCopy(grid)})
+						solutions = append(solutions, ResponseSolution{Solution{num, row, col, "Single Naked", "col"}, CreateCopy(grid)})
 
 					}
+				} else {
+					for num := range possibles {
+
+						if IsNumberInBloc(grid, indiceBloc, num) || IsNumberInCol(grid, col, num) {
+							delete(possibles, num)
+						}
+					}
+
+					if len(possibles) == 1 {
+						for num := range possibles {
+							grid.Grid[row][col] = num
+							*numberPlaced = true
+							fmt.Println("Single Naked")
+
+							solutions = append(solutions, ResponseSolution{Solution{num, row, col, "Single Naked", ""}, CreateCopy(grid)})
+
+						}
+					}
 				}
+
 			}
 		}
 	}

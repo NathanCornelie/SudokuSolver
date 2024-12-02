@@ -97,27 +97,24 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 	var i, j int8
 	for i = 0; i < 9; i++ {
 		for j = 0; j < 9; j++ {
-			positionsDisponibles := FindPlacesInBloc(&copy, j)
+			positionsDisponibles := FindPlacesInCol(&copy, i)
 			if len(positionsDisponibles) == 1 {
 				row, col := positionsDisponibles[0].row, positionsDisponibles[0].col
-				if !IsNumberInBloc(&copy, j, cible) {
+				if !IsNumberInCol(&copy, i, cible) {
 					copy.Grid[row][col] = cible
-					FillEmptyPlacesInBloc(&copy, j)
+					FillEmptyPlacesInBloc(&copy, FindBlocFromCoordinate(row, col))
 					FillEmptyPlacesInCol(&copy, col)
 					FillEmptyPlacesInRow(&copy, row)
-
 				}
-				if !IsNumberInBloc(grid, j, cible) {
+				if !IsNumberInCol(grid, i, cible) {
 					grid.Grid[row][col] = cible
 					*numberPlaced = true
 					manquants[cible-1]--
-					fmt.Printf("%d placed in position %d,%d (bloc)\n", cible, row, col)
-
-					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "base", "bloc"}, CreateCopy(grid)})
+					fmt.Printf("%d placed in position %d,%d (col)\n", cible, row, col)
+					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "base", "col"}, CreateCopy(grid)})
 
 				}
 			}
-
 			positionsDisponibles = FindPlacesInRow(&copy, i)
 			if len(positionsDisponibles) == 1 {
 				row, col := positionsDisponibles[0].row, positionsDisponibles[0].col
@@ -139,21 +136,23 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 				}
 			}
 
-			positionsDisponibles = FindPlacesInCol(&copy, i)
+			positionsDisponibles = FindPlacesInBloc(&copy, j)
 			if len(positionsDisponibles) == 1 {
 				row, col := positionsDisponibles[0].row, positionsDisponibles[0].col
-				if !IsNumberInCol(&copy, i, cible) {
+				if !IsNumberInBloc(&copy, j, cible) {
 					copy.Grid[row][col] = cible
-					FillEmptyPlacesInBloc(&copy, FindBlocFromCoordinate(row, col))
+					FillEmptyPlacesInBloc(&copy, j)
 					FillEmptyPlacesInCol(&copy, col)
 					FillEmptyPlacesInRow(&copy, row)
+
 				}
-				if !IsNumberInCol(grid, i, cible) {
+				if !IsNumberInBloc(grid, j, cible) {
 					grid.Grid[row][col] = cible
 					*numberPlaced = true
 					manquants[cible-1]--
-					fmt.Printf("%d placed in position %d,%d (col)\n", cible, row, col)
-					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "base", "col"}, CreateCopy(grid)})
+					fmt.Printf("%d placed in position %d,%d (bloc)\n", cible, row, col)
+
+					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "base", "bloc"}, CreateCopy(grid)})
 
 				}
 			}

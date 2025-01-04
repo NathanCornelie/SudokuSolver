@@ -111,7 +111,7 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 					*numberPlaced = true
 					manquants[cible-1]--
 					fmt.Printf("%d placed in position %d,%d (col)\n", cible, row, col)
-					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "base", "col"}, CreateCopy(grid)})
+					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "Base", "col"}, CreateCopy(grid)})
 
 				}
 			}
@@ -131,7 +131,7 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 					manquants[cible-1]--
 					fmt.Printf("%d placed in position %d,%d (row)\n", cible, row, col)
 
-					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "base", "row"}, CreateCopy(grid)})
+					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "Base", "row"}, CreateCopy(grid)})
 
 				}
 			}
@@ -152,7 +152,7 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 					manquants[cible-1]--
 					fmt.Printf("%d placed in position %d,%d (bloc)\n", cible, row, col)
 
-					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "base", "bloc"}, CreateCopy(grid)})
+					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "Base", "bloc"}, CreateCopy(grid)})
 
 				}
 			}

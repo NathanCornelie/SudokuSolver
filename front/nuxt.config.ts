@@ -4,6 +4,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["vuetify-nuxt-module", "nuxt-mdi"],
   appConfig: {
-    apiURL: "http://localhost:8080",
+    apiURL: "http://localhost:8081",
   },
 });

@@ -21,11 +21,11 @@
               selectedSolutionIndex == i ? 'selectedSolution' : '',
             ]"
             @click="$emit('selectSolution', sol, i)"
-            ><h3>{{ sol.solution.method }}_{{ sol.solution.type }}</h3>
-            <p>
-              <span class="mr-2">ligne {{ sol.solution.row + 1 }}</span
-              ><span class="mr-2">ligne {{ sol.solution.col + 1 }}</span
-              ><span>valeur {{ sol.solution.value }}</span>
+            ><h3>{{ sol.solution.method }} <span class="text-grey"> ({{ sol.solution.type }})</span></h3>
+            <p class=" font-weight-bold">
+              <span class="mr-2" >row <span class="font-weight-regular">{{ sol.solution.row + 1 }}</span></span
+              ><span class="mr-2">col <span class="font-weight-regular">{{ sol.solution.col + 1 }}</span></span
+              ><span>valeur <span class="font-weight-regular">{{ sol.solution.value }}</span></span>
             </p>
           </v-card>
         </v-col>

@@ -19,6 +19,11 @@ type ResponseSolution struct {
 	Grid     Grid     `json:"grid"`
 }
 
+type SolverSolution struct {
+	Completed bool               `json:"completed"`
+	Solutions []ResponseSolution `json:"solution"`
+}
+
 type Solution struct {
 	Value  int8   `json:"value"`
 	Row    int8   `json:"row"`
@@ -71,7 +76,7 @@ func IsNumberInBloc(grid *Grid, bloc int8, num int8) bool {
 }
 
 func IsGridValueCorrect(grid *Grid) ResponseSolve {
-	print(len(grid.Grid))
+	fmt.Println("check values")
 	for _, row := range grid.Grid {
 		for _, val := range row {
 
@@ -85,13 +90,13 @@ func IsGridValueCorrect(grid *Grid) ResponseSolve {
 }
 
 func isGridSolvable(grid *Grid) bool {
+	_,resp := BruteForceSolve(grid);
 
-	return true
+	return resp
 }
 
-func isGridValid(grid *Grid) {
 
-}
+
 func BruteForceSolveCopy(result *Grid) ([9][9]int8, bool) {
 	var row, col int8
 	for row = 0; row < 9; row++ {
@@ -115,7 +120,61 @@ func BruteForceSolveCopy(result *Grid) ([9][9]int8, bool) {
 	return result.Grid, true
 
 }
+
+func isGridValid(grid *Grid) bool {
+	fmt.Println("check grid")
+
+	// Vérifier les lignes
+	for i := 0; i < 9; i++ {
+		if !isValidSet(grid.Grid[i][:]) {
+			return false
+		}
+	}
+
+	// Vérifier les colonnes
+	for i := 0; i < 9; i++ {
+		column := [9]int8{}
+		for j := 0; j < 9; j++ {
+			column[j] = grid.Grid[j][i]
+		}
+		if !isValidSet(column[:]) {
+			return false
+		}
+	}
+
+	// Vérifier les blocs 3x3
+	for row := 0; row < 9; row += 3 {
+		for col := 0; col < 9; col += 3 {
+			block := [9]int8{}
+			idx := 0
+			for i := row; i < row+3; i++ {
+				for j := col; j < col+3; j++ {
+					block[idx] = grid.Grid[i][j]
+					idx++
+				}
+			}
+			if !isValidSet(block[:]) {
+				return false
+			}
+		}
+	}
+
+	return true
+}
+func isValidSet(nums []int8) bool {
+	seen := make(map[int8]bool)
+	for _, num := range nums {
+		if num != 0 { // Ignorer les cases vides
+			if seen[num] {
+				return false
+			}
+			seen[num] = true
+		}
+	}
+	return true
+}
 func BruteForceSolve(grid *Grid) ([9][9]int8, bool) {
+	fmt.Println("bruteforce")
 	result := grid
 	if _, ok := BruteForceSolveCopy(result); ok {
 		return result.Grid, true

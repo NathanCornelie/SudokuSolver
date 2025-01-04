@@ -4,8 +4,19 @@
     class="bg-transparent py-7 d-flex flex-column align-center justify-space-between w-100"
   >
     <div style="width: fit-content" class="my-5">
-      <div class="mb-5 d-flex align-center justify-space-around">
-        <v-btn>Edit grid</v-btn>
+      <div class="mb-5 d-flex align-center justify-center">
+        <div v-if="isEditMode" class="w-50 d-flex justify-space-between">
+          <v-btn @click="cancelEdit()" color="red"
+            ><MdiIcon icon="mdiWindowClose" size="30" />Cancel</v-btn
+          >
+          <v-btn @click="saveEdit()"
+            ><MdiIcon icon="mdiContentSave" size="30" />Save</v-btn
+          >
+        </div>
+        <div v-else class="w-100 d-flex align-center justify-space-around">
+          <v-btn @Click="goToEdit()">Edit Mode</v-btn>
+          <v-btn @Click="resetGrid()">Reset Grid</v-btn>
+        </div>
       </div>
       <v-card class="mb-5">
         <v-container id="solutions-container">
@@ -29,13 +40,16 @@
                 ]"
                 @click="handleSetSelectedCase(i, j)"
               >
-                <p>{{ value }}</p>
+                <p v-if="value">{{ value }}</p>
               </v-card>
             </v-col>
           </v-row>
         </v-container>
       </v-card>
-      <div class="mt-5 d-flex align-center justify-space-around">
+      <div
+        class="mt-5 d-flex align-center justify-space-around"
+        v-if="!isEditMode"
+      >
         <v-btn @click="handleSolve()">View Solution</v-btn>
         <v-btn @click="handleGetNextSolution">Next Solution</v-btn>
         <v-btn @click="handleGetAllSolutions">All Solutions</v-btn>
@@ -43,12 +57,33 @@
     </div>
 
     <Solutions
+      v-if="!isEditMode"
       :solutions="solutions ? solutions : []"
       :selected-solution-index="selectedSolutionIndex"
       text="hello"
       @select-solution="handleSelectSolutuion"
       @change-selected-solution="handleChangeSelectedSolutionIndex"
     />
+    <Keyboard
+      v-else
+      @handle-click="handleKeyboardClick"
+      :selected_key="selected_key"
+    />
+    <v-snackbar
+      v-model="snackbar"
+      color="error"
+      variant="tonal"
+      timeout="3000"
+      location="top right"
+    >
+      <p class="font-weight-bold">{{ text_snackbar }}</p>
+
+      <template v-slot:actions>
+        <v-btn color="pink" variant="text" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-card>
 </template>
 
@@ -59,9 +94,13 @@ import Solution from "~/models/Solution";
 
 const base_grid = ref<Grid>();
 const displayed_grid = ref<Grid>();
+const before_edit_grid = ref<Grid>();
 const solutions = ref<Solution[]>([]);
-const selectedSolutionIndex = ref<number>(0);
 const selectedSolution = ref<Solution>();
+const selectedSolutionIndex = ref<number>(0);
+
+const isEditMode = ref<boolean>(false);
+
 const singleNakedColorationPositions = ref<{ row: number; col: number }[]>([]);
 const selectedCase = ref<{ row: number; col: number }>({ row: 0, col: 0 });
 const data_grid = ref<number[][]>([
@@ -75,11 +114,48 @@ const data_grid = ref<number[][]>([
   [0, 0, 0, 4, 1, 9, 0, 0, 5],
   [0, 0, 0, 0, 8, 0, 0, 7, 9],
 ]);
+const new_grid = ref<number[][]>([
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+]);
+
+const snackbar = ref<boolean>(false);
+const text_snackbar = ref<String>("");
+const selected_key = ref<number>(0);
 onMounted(() => {
   base_grid.value = new Grid(data_grid.value);
   displayed_grid.value = base_grid.value;
+  before_edit_grid.value = base_grid.value;
+  document.addEventListener("keydown", function (e) {
+    if (displayed_grid.value)
+      if (e.key in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]) {
+        displayed_grid.value.grid[selectedCase.value.row][
+          selectedCase.value.col
+        ] = +e.key;
+      }
+    if (e.key == "ArrowRight") {
+      if (selectedCase.value.col < 8) selectedCase.value.col++;
+    }
+    if (e.key == "ArrowUp") {
+      if (selectedCase.value.row > 0) selectedCase.value.row--;
+    }
+    if (e.key == "ArrowLeft") {
+      if (selectedCase.value.col > 0) selectedCase.value.col--;
+    }
+    if (e.key == "ArrowDown") {
+      if (selectedCase.value.row < 8) selectedCase.value.row++;
+    }
+  });
 });
 const handleSolve = async () => {
+  selectedSolution.value = undefined;
   if (data_grid.value) {
     const solution = await SolverAPI.solve(new Grid(data_grid.value));
 
@@ -101,6 +177,36 @@ const handleGetNextSolution = async () => {
         col: solution.solution.col,
       };
       handleSelectSolutuion(solution, solutions.value.length - 1);
+    }
+  }
+};
+
+const resetGrid = () => {
+  if (displayed_grid.value) displayed_grid.value.grid = data_grid.value;
+  selectedSolution.value = undefined;
+  solutions.value = [];
+};
+
+const goToEdit = () => {
+  isEditMode.value = true;
+  if (displayed_grid.value && before_edit_grid.value) {
+    before_edit_grid.value = { ...displayed_grid.value };
+    displayed_grid.value.grid = new_grid.value;
+  }
+};
+const cancelEdit = () => {
+  isEditMode.value = false;
+  if (before_edit_grid.value) displayed_grid.value = before_edit_grid.value;
+};
+const saveEdit = async () => {
+  if (displayed_grid.value) {
+    const resp = await SolverAPI.checkGrid(displayed_grid.value);
+    if (resp.verified) {
+      isEditMode.value = false;
+      solutions.value = [];
+    } else {
+      snackbar.value = true;
+      text_snackbar.value = resp.message;
     }
   }
 };
@@ -316,7 +422,12 @@ const colorationSingleNaked = (row: number, col: number) => {
     }
   }
 
-  if (!last_row || !last_col || !last_bloc || selectedSolution.value?.solution.type == "") {
+  if (
+    !last_row ||
+    !last_col ||
+    !last_bloc ||
+    selectedSolution.value?.solution.type == ""
+  ) {
     if (
       displayed_grid.value?.grid[row][col] &&
       singleNakedColorationPositions.value.find(
@@ -349,14 +460,24 @@ const handleGetAllSolutions = async () => {
   }
 };
 const handleSetSelectedCase = (row: number, col: number) => {
+  selectedSolution.value = undefined;
   selectedCase.value.row = row;
   selectedCase.value.col = col;
+  if (isEditMode && displayed_grid.value) {
+    displayed_grid.value.grid[selectedCase.value.row][selectedCase.value.col] =
+      selected_key.value;
+  }
 };
 const handleSelectSolutuion = (sol: Solution, index: number) => {
   selectedSolution.value = sol;
   selectedCase.value = { row: sol.solution.row, col: sol.solution.col };
   displayed_grid.value = new Grid(sol.grid.grid);
   selectedSolutionIndex.value = index;
+};
+const handleKeyboardClick = (v: number) => {
+  if (isEditMode && selectedCase && displayed_grid.value) {
+    selected_key.value = v;
+  }
 };
 watch(
   selectedSolutionIndex,
@@ -468,7 +589,7 @@ watch(
 
 <style>
 .cell {
-  border: 1px solid black;
+  border: 2px solid rgb(167, 167, 167);
   width: 50px;
   height: 50px;
   text-align: center;

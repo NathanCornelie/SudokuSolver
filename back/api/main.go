@@ -16,8 +16,9 @@ func main() {
 	router.POST("/getsolution", engine.OneSolutionAPI)
 	router.POST("/solve", engine.SolveAPI)
 	router.POST("/getallsolutions", engine.AllMoovesAPI)
-	router.POST("/all_next_moooves", engine.AllNextMoovesAPI)
-
-	router.Run("localhost:8080")
+	router.POST("/all_next_mooves", engine.AllNextMoovesAPI)
+	router.POST("/check_grid",engine.CheckCustom)
+	
+	router.Run("localhost:8081")
 
 }

@@ -85,7 +85,11 @@
         </v-btn>
       </template>
     </v-snackbar>
-  </v-card>
+    
+  </v-card><div id="help" class="help_button">
+      
+      <HelpModal :display="displayHelp"/>
+    </div>
   </div>
   
 </template>
@@ -103,7 +107,7 @@ const selectedSolution = ref<Solution>();
 const selectedSolutionIndex = ref<number>(0);
 
 const isEditMode = ref<boolean>(false);
-
+const displayHelp = ref<boolean>(false)
 const singleNakedColorationPositions = ref<{ row: number; col: number }[]>([]);
 const selectedCase = ref<{ row: number; col: number }>({ row: 0, col: 0 });
 const data_grid = ref<number[][]>([
@@ -477,7 +481,7 @@ const handleSetSelectedCase = (row: number, col: number) => {
   selectedSolution.value = undefined;
   selectedCase.value.row = row;
   selectedCase.value.col = col;
-  if (isEditMode && displayed_grid.value) {
+  if (isEditMode.value && displayed_grid.value) {
     displayed_grid.value.grid[selectedCase.value.row][selectedCase.value.col] =
       selected_key.value;
   }
@@ -632,4 +636,11 @@ watch(
 .red_bg {
   background-color: rgba(255, 0, 0, 0.349);
 }
+.help_button{
+  position: absolute;
+  
+  top: 20px;
+  right:  40px;
+}
+
 </style>

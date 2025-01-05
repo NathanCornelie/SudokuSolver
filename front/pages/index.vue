@@ -62,7 +62,7 @@
       color="error"
       variant="tonal"
       timeout="3000"
-      location="top right"
+      location="top left"
     >
       <p class="font-weight-bold">{{ text_snackbar }}</p>
 
@@ -84,13 +84,13 @@
     <Keyboard
       v-else
       @handle-click="handleKeyboardClick"
-      :selected_key="selected_key"
+      :selected_key="selectedKey"
     />
   </v-card>
   
   <div id="help" class="help_button">
       
-      <HelpModal :display="displayHelp"/>
+      <HelpModal :isEdit="isEditMode"/>
     </div>
     
   </div>
@@ -138,7 +138,7 @@ const new_grid = ref<number[][]>([
 
 const snackbar = ref<boolean>(false);
 const text_snackbar = ref<String>("");
-const selected_key = ref<number>(0);
+const selectedKey = ref<number>(-1);
 onMounted(() => {
   base_grid.value = new Grid(data_grid.value);
   displayed_grid.value = base_grid.value;
@@ -484,9 +484,9 @@ const handleSetSelectedCase = (row: number, col: number) => {
   selectedSolution.value = undefined;
   selectedCase.value.row = row;
   selectedCase.value.col = col;
-  if (isEditMode.value && displayed_grid.value) {
+  if (isEditMode.value && displayed_grid.value && selectedKey.value>-1) {
     displayed_grid.value.grid[selectedCase.value.row][selectedCase.value.col] =
-      selected_key.value;
+      selectedKey.value;
   }
 };
 const handleSelectSolutuion = (sol: Solution, index: number) => {
@@ -497,7 +497,10 @@ const handleSelectSolutuion = (sol: Solution, index: number) => {
 };
 const handleKeyboardClick = (v: number) => {
   if (isEditMode && selectedCase && displayed_grid.value) {
-    selected_key.value = v;
+    if(selectedKey.value == v) selectedKey.value = -1
+    
+    else 
+    selectedKey.value = v;
   }
 };
 watch(

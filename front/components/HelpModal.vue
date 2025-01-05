@@ -1,12 +1,17 @@
 <template>
-  
   <div class="d-flex flex-column align-end">
     <v-btn @click="display = !display">
       <MdiIcon icon="mdiHelp" size="20" />
     </v-btn>
-    <v-card class="mt-2" v-if="display">
+    <v-card class="mt-2" v-if="display" max-width="300px">
       <v-card-text>
-        <v-list lines="one">
+        <div v-if="props.isEdit" class="help_edit">
+          <p class="py-2 "><span><MdiIcon icon="mdiHelp" class="mr-1"/></span>Select one of the numbers on the numeric keypad and click on the cell to enter the value.</p>
+          <p class="py-2 "><span><MdiIcon icon="mdiHelp" class="mr-1"/></span>To deselect a value, click on it again.</p>
+          <p class="py-2 "><span><MdiIcon icon="mdiHelp" class="mr-1"/></span>You can use the keyboard to move through the grid and enter values.</p>
+        </div>
+        
+        <v-list lines="one" v-else>
           <v-list-item
             v-for="(n, i) in content"
             :key="i"
@@ -24,10 +29,10 @@
       </v-card-text>
     </v-card>
   </div>
-
 </template>
 
 <script lang="ts" setup>
+const props = defineProps<{ isEdit: boolean }>();
 const display = ref<boolean>(false);
 const content = ref<{ title: string; content: string }[]>([
   {
@@ -53,8 +58,9 @@ const content = ref<{ title: string; content: string }[]>([
 ]);
 </script>
 
-<style>
+<style >
 .tooltip {
   background-color: red;
 }
+
 </style>

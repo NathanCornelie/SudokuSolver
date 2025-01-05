@@ -57,19 +57,6 @@
       </div>
     </div>
 
-    <Solutions
-      v-if="!isEditMode"
-      :solutions="solutions ? solutions : []"
-      :selected-solution-index="selectedSolutionIndex"
-      text="hello"
-      @select-solution="handleSelectSolutuion"
-      @change-selected-solution="handleChangeSelectedSolutionIndex"
-    />
-    <Keyboard
-      v-else
-      @handle-click="handleKeyboardClick"
-      :selected_key="selected_key"
-    />
     <v-snackbar
       v-model="snackbar"
       color="error"
@@ -86,10 +73,26 @@
       </template>
     </v-snackbar>
     
-  </v-card><div id="help" class="help_button">
+    <Solutions
+      v-if="!isEditMode"
+      :solutions="solutions ? solutions : []"
+      :selected-solution-index="selectedSolutionIndex"
+      text="hello"
+      @select-solution="handleSelectSolutuion"
+      @change-selected-solution="handleChangeSelectedSolutionIndex"
+    />
+    <Keyboard
+      v-else
+      @handle-click="handleKeyboardClick"
+      :selected_key="selected_key"
+    />
+  </v-card>
+  
+  <div id="help" class="help_button">
       
       <HelpModal :display="displayHelp"/>
     </div>
+    
   </div>
   
 </template>

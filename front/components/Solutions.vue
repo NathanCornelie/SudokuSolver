@@ -1,7 +1,7 @@
 <template>
   <v-card class="container my-7 py-5" style="" scrollable>
     <div
-      style="height: 360px"
+      style="height: 320px"
       class="pa-5 overflow-auto"
       :items="[1]"
       id="solutions-container"

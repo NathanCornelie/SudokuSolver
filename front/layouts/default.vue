@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" >
     <NuxtPage />
   </div>
 </template>
@@ -12,7 +12,9 @@
   /* align-items: center; */
   justify-content: center;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   background-color: rgba(236, 196, 143, 0.247);
 }
+
 </style>

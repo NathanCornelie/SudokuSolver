@@ -90,12 +90,11 @@ func IsGridValueCorrect(grid *Grid) ResponseSolve {
 }
 
 func isGridSolvable(grid *Grid) bool {
-	_,resp := BruteForceSolve(grid);
+	fmt.Println("bruteforce")
+	_, resp := BruteForceSolve(grid)
 
 	return resp
 }
-
-
 
 func BruteForceSolveCopy(result *Grid) ([9][9]int8, bool) {
 	var row, col int8
@@ -174,7 +173,7 @@ func isValidSet(nums []int8) bool {
 	return true
 }
 func BruteForceSolve(grid *Grid) ([9][9]int8, bool) {
-	fmt.Println("bruteforce")
+
 	result := grid
 	if _, ok := BruteForceSolveCopy(result); ok {
 		return result.Grid, true

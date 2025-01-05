@@ -11,7 +11,7 @@
           <p class="py-2 "><span><MdiIcon icon="mdiHelp" class="mr-1"/></span>You can use the keyboard to move through the grid and enter values.</p>
         </div>
         
-        <v-list lines="one" v-else>
+        <v-list lines="two" v-else>
           <v-list-item
             v-for="(n, i) in content"
             :key="i"

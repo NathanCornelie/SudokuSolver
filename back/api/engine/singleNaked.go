@@ -14,8 +14,8 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 
 		// Collect present numbers in the row
 		for col := 0; col < 9; col++ {
-			if grid.Grid[row][col] != 0 {
-				presents[grid.Grid[row][col]] = struct{}{}
+			if grid.Grid[row][col].Value != 0 {
+				presents[grid.Grid[row][col].Value] = struct{}{}
 			}
 		}
 
@@ -27,12 +27,12 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 		}
 
 		for col = 0; col < 9; col++ {
-			if grid.Grid[row][col] == 0 {
+			if grid.Grid[row][col].Value == 0 {
 				indiceBloc := FindBlocFromCoordinate(row, col)
 				possibles := make(map[int8]struct{})
 				if len(manquants) == 1 {
 					for num := range manquants {
-						grid.Grid[row][col] = num
+						grid.Grid[row][col].Value = num
 						*numberPlaced = true
 						fmt.Println("Single Naked")
 
@@ -55,7 +55,7 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 				}
 				if len(possibles) == 1 {
 					for num := range possibles {
-						grid.Grid[row][col] = num
+						grid.Grid[row][col].Value = num
 						*numberPlaced = true
 						fmt.Println("Single Naked")
 
@@ -72,7 +72,7 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 
 					if len(possibles) == 1 {
 						for num := range possibles {
-							grid.Grid[row][col] = num
+							grid.Grid[row][col].Value = num
 							*numberPlaced = true
 							fmt.Println("Single Naked")
 

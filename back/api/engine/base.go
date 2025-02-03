@@ -12,7 +12,7 @@ func FindPlacesInBloc(grid *Grid, bloc int8) []struct{ row, col int8 } {
 
 	for j := rowStart; j < rowStart+3; j++ {
 		for k := colStart; k < colStart+3; k++ {
-			if grid.Grid[j][k] == 0 {
+			if grid.Grid[j][k].Value == 0 {
 				FindPositions = append(FindPositions, struct{ row, col int8 }{j, k})
 			}
 		}
@@ -25,7 +25,7 @@ func FindPlacesInRow(grid *Grid, row int8) []struct{ row, col int8 } {
 	var FindPositions []struct{ row, col int8 }
 	var ind int8
 	for ind = 0; ind < 9; ind++ {
-		if grid.Grid[row][ind] == 0 {
+		if grid.Grid[row][ind].Value == 0 {
 			FindPositions = append(FindPositions, struct{ row, col int8 }{row, ind})
 		}
 	}
@@ -37,7 +37,7 @@ func FindPlacesInCol(grid *Grid, col int8) []struct{ row, col int8 } {
 	var FindPositions []struct{ row, col int8 }
 	var ind int8
 	for ind = 0; ind < 9; ind++ {
-		if grid.Grid[ind][col] == 0 {
+		if grid.Grid[ind][col].Value == 0 {
 			FindPositions = append(FindPositions, struct{ row, col int8 }{ind, col})
 		}
 	}
@@ -50,8 +50,8 @@ func FillEmptyPlacesInBloc(grid *Grid, bloc int8) {
 	colStart := 3 * (bloc % 3)
 	for row := rowStart; row < rowStart+3; row++ {
 		for col := colStart; col < colStart+3; col++ {
-			if grid.Grid[row][col] == 0 {
-				grid.Grid[row][col] = 10
+			if grid.Grid[row][col].Value == 0 {
+				grid.Grid[row][col].Value = 10
 			}
 		}
 	}
@@ -59,8 +59,8 @@ func FillEmptyPlacesInBloc(grid *Grid, bloc int8) {
 func FillEmptyPlacesInCol(grid *Grid, col int8) {
 	var row int8
 	for row = 0; row < 9; row++ {
-		if grid.Grid[row][col] == 0 {
-			grid.Grid[row][col] = 10
+		if grid.Grid[row][col].Value == 0 {
+			grid.Grid[row][col].Value = 10
 
 		}
 	}
@@ -68,12 +68,14 @@ func FillEmptyPlacesInCol(grid *Grid, col int8) {
 func FillEmptyPlacesInRow(grid *Grid, row int8) {
 	var col int8
 	for col = 0; col < 9; col++ {
-		if grid.Grid[row][col] == 0 {
-			grid.Grid[row][col] = 10
+		if grid.Grid[row][col].Value == 0 {
+			grid.Grid[row][col].Value = 10
 
 		}
 	}
 }
+
+
 
 // FindSimpleNumber Finds and places a given number if it has a unique spot in a block, row, or column.
 func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *bool) []ResponseSolution {
@@ -84,12 +86,11 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 	var col int8
 	for col = 0; col < 9; col++ {
 		for row = 0; row < 9; row++ {
-			if copy.Grid[row][col] == cible {
+			if copy.Grid[row][col].Value == cible {
 				FillEmptyPlacesInRow(&copy, row)
 				FillEmptyPlacesInCol(&copy, col)
 				bloc := 3*(row/3) + (col / 3)
 				FillEmptyPlacesInBloc(&copy, bloc)
-
 			}
 		}
 	}
@@ -101,16 +102,17 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 			if len(positionsDisponibles) == 1 {
 				row, col := positionsDisponibles[0].row, positionsDisponibles[0].col
 				if !IsNumberInCol(&copy, i, cible) {
-					copy.Grid[row][col] = cible
+					copy.Grid[row][col].Value = cible
 					FillEmptyPlacesInBloc(&copy, FindBlocFromCoordinate(row, col))
 					FillEmptyPlacesInCol(&copy, col)
 					FillEmptyPlacesInRow(&copy, row)
 				}
 				if !IsNumberInCol(grid, i, cible) {
-					grid.Grid[row][col] = cible
+					grid.Grid[row][col].Value = cible
 					*numberPlaced = true
 					manquants[cible-1]--
 					fmt.Printf("%d placed in position %d,%d (col)\n", cible, row, col)
+					ColorSimpleCol(grid,struct{ row, col int8 }{row, col})
 					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "Base", "col"}, CreateCopy(grid)})
 
 				}
@@ -119,18 +121,18 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 			if len(positionsDisponibles) == 1 {
 				row, col := positionsDisponibles[0].row, positionsDisponibles[0].col
 				if !IsNumberInRow(&copy, i, cible) {
-					copy.Grid[row][col] = cible
+					copy.Grid[row][col].Value = cible
 					FillEmptyPlacesInBloc(&copy, FindBlocFromCoordinate(row, col))
 					FillEmptyPlacesInCol(&copy, col)
 					FillEmptyPlacesInRow(&copy, row)
 				}
 				if !IsNumberInRow(grid, i, cible) {
 
-					grid.Grid[row][col] = cible
+					grid.Grid[row][col].Value = cible
 					*numberPlaced = true
 					manquants[cible-1]--
 					fmt.Printf("%d placed in position %d,%d (row)\n", cible, row, col)
-
+					ColorSimpleRow(grid,struct{ row, col int8 }{row, col})
 					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "Base", "row"}, CreateCopy(grid)})
 
 				}
@@ -140,19 +142,20 @@ func FindSimpleNumber(grid *Grid, cible int8, manquants *[9]int8, numberPlaced *
 			if len(positionsDisponibles) == 1 {
 				row, col := positionsDisponibles[0].row, positionsDisponibles[0].col
 				if !IsNumberInBloc(&copy, j, cible) {
-					copy.Grid[row][col] = cible
+					copy.Grid[row][col].Value = cible
 					FillEmptyPlacesInBloc(&copy, j)
 					FillEmptyPlacesInCol(&copy, col)
 					FillEmptyPlacesInRow(&copy, row)
 
 				}
 				if !IsNumberInBloc(grid, j, cible) {
-					grid.Grid[row][col] = cible
+					grid.Grid[row][col].Value = cible
 					*numberPlaced = true
 					manquants[cible-1]--
 					fmt.Printf("%d placed in position %d,%d (bloc)\n", cible, row, col)
-
-					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "Base", "bloc"}, CreateCopy(grid)})
+					var coloredCopy = CreateCopy(grid)
+					ColorSimpleBloc(&coloredCopy,struct{ row, col int8 }{row, col})
+					solutions = append(solutions, ResponseSolution{Solution{cible, row, col, "Base", "bloc"}, CreateCopy(&coloredCopy)})
 
 				}
 			}

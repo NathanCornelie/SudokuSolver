@@ -4,13 +4,18 @@ import (
 	"fmt"
 )
 
+type Case struct {
+	Value int8   `json:"value"`
+	Color string `json:"color"`
+}
+
 type Grid struct {
-	Grid [9][9]int8 `json:"grid"`
+	Grid [9][9]Case `json:"grid"`
 }
 
 type ResponseSolve struct {
 	Success bool       `json:"success"`
-	Grid    [9][9]int8 `json:"grid"`
+	Grid    [9][9]Case `json:"grid"`
 	Message string     `json:"message"`
 }
 
@@ -35,7 +40,7 @@ type Solution struct {
 func DisplayGrid(grid *Grid) {
 	for _, row := range grid.Grid {
 		for _, col := range row {
-			print(col)
+			print(col.Value)
 		}
 		print("\n")
 	}
@@ -44,7 +49,7 @@ func DisplayGrid(grid *Grid) {
 
 func IsNumberInRow(grid *Grid, row int8, num int8) bool {
 	for _, val := range grid.Grid[row] {
-		if val == num {
+		if val.Value == num {
 			return true
 		}
 	}
@@ -53,7 +58,7 @@ func IsNumberInRow(grid *Grid, row int8, num int8) bool {
 
 func IsNumberInCol(grid *Grid, col int8, num int8) bool {
 	for i := range grid.Grid {
-		if grid.Grid[i][col] == num {
+		if grid.Grid[i][col].Value == num {
 			return true
 		}
 	}
@@ -67,7 +72,7 @@ func IsNumberInBloc(grid *Grid, bloc int8, num int8) bool {
 
 	for i := startRow; i <= startRow+2; i++ {
 		for j := startCol; j <= startCol+2; j++ {
-			if grid.Grid[i][j] == num {
+			if grid.Grid[i][j].Value == num {
 				return true
 			}
 		}
@@ -80,8 +85,8 @@ func IsGridValueCorrect(grid *Grid) ResponseSolve {
 	for _, row := range grid.Grid {
 		for _, val := range row {
 
-			if val < 0 || val > 9 {
-				return ResponseSolve{false, grid.Grid, fmt.Sprintf("Invalid value in Grid , found %d", val)}
+			if val.Value < 0 || val.Value > 9 {
+				return ResponseSolve{false, grid.Grid, fmt.Sprintf("Invalid value in Grid , found %d", val.Value)}
 			}
 		}
 	}
@@ -96,18 +101,18 @@ func isGridSolvable(grid *Grid) bool {
 	return resp
 }
 
-func BruteForceSolveCopy(result *Grid) ([9][9]int8, bool) {
+func BruteForceSolveCopy(result *Grid) ([9][9]Case, bool) {
 	var row, col int8
 	for row = 0; row < 9; row++ {
 		for col = 0; col < 9; col++ {
-			if result.Grid[row][col] == 0 {
+			if result.Grid[row][col].Value == 0 {
 				for num := int8(1); num <= 9; num++ {
 					if IsValid(result, row, col, num) {
-						result.Grid[row][col] = num
+						result.Grid[row][col].Value = num
 						if _, ok := BruteForceSolve(result); ok {
 							return result.Grid, true
 						}
-						result.Grid[row][col] = 0
+						result.Grid[row][col].Value = 0
 					}
 
 				}
@@ -132,7 +137,7 @@ func isGridValid(grid *Grid) bool {
 
 	// Vérifier les colonnes
 	for i := 0; i < 9; i++ {
-		column := [9]int8{}
+		column := [9]Case{}
 		for j := 0; j < 9; j++ {
 			column[j] = grid.Grid[j][i]
 		}
@@ -144,7 +149,7 @@ func isGridValid(grid *Grid) bool {
 	// Vérifier les blocs 3x3
 	for row := 0; row < 9; row += 3 {
 		for col := 0; col < 9; col += 3 {
-			block := [9]int8{}
+			block := [9]Case{}
 			idx := 0
 			for i := row; i < row+3; i++ {
 				for j := col; j < col+3; j++ {
@@ -160,19 +165,19 @@ func isGridValid(grid *Grid) bool {
 
 	return true
 }
-func isValidSet(nums []int8) bool {
+func isValidSet(nums []Case) bool {
 	seen := make(map[int8]bool)
 	for _, num := range nums {
-		if num != 0 { // Ignorer les cases vides
-			if seen[num] {
+		if num.Value != 0 { // Ignorer les cases vides
+			if seen[num.Value] {
 				return false
 			}
-			seen[num] = true
+			seen[num.Value] = true
 		}
 	}
 	return true
 }
-func BruteForceSolve(grid *Grid) ([9][9]int8, bool) {
+func BruteForceSolve(grid *Grid) ([9][9]Case, bool) {
 
 	result := grid
 	if _, ok := BruteForceSolveCopy(result); ok {
@@ -184,13 +189,13 @@ func BruteForceSolve(grid *Grid) ([9][9]int8, bool) {
 
 func IsValid(grid *Grid, row int8, col int8, num int8) bool {
 	for i := 0; i < 9; i++ {
-		if grid.Grid[row][i] == num {
+		if grid.Grid[row][i].Value == num {
 			return false
 		}
 	}
 
 	for i := 0; i < 9; i++ {
-		if grid.Grid[i][col] == num {
+		if grid.Grid[i][col].Value == num {
 			return false
 		}
 	}
@@ -199,7 +204,7 @@ func IsValid(grid *Grid, row int8, col int8, num int8) bool {
 	var i, j int8
 	for i = 0; i < 3; i++ {
 		for j = 0; j < 3; j++ {
-			if grid.Grid[startRow+i][startCol+j] == num {
+			if grid.Grid[startRow+i][startCol+j].Value == num {
 				return false
 			}
 		}
@@ -219,4 +224,99 @@ func CreateCopy(grid *Grid) Grid {
 		}
 	}
 	return copy
+}
+
+func ClearColor(grid *Grid) {
+	for i := 0; i < 9; i++ {
+		for j := 0; j < 9; j++ {
+			grid.Grid[i][j].Color = ""
+		}
+	}
+}
+
+func ColorBloc(grid *Grid, bloc int8, value int8) {
+	startRow := 3 * (bloc / 3)
+	startCol := 3 * (bloc % 3)
+
+	for i := startRow; i <= startRow+2; i++ {
+		for j := startCol; j <= startCol+2; j++ {
+			if grid.Grid[i][j].Value == value {
+				grid.Grid[i][j].Color = "red1"
+			} else {
+				grid.Grid[i][j].Color = "red2"
+			}
+		}
+	}
+}
+func ColorRow(grid *Grid, row int8, value int8) {
+	for i := 0; i < 9; i++ {
+		if grid.Grid[row][i].Value == value {
+			grid.Grid[row][i].Color = "red1"
+		} else {
+			grid.Grid[row][i].Color = "red2"
+		}
+	}
+}
+func ColorCol(grid *Grid, col int8, value int8) {
+	for i := 0; i < 9; i++ {
+		if grid.Grid[i][col].Value == value {
+			grid.Grid[i][col].Color = "red1"
+		} else {
+			grid.Grid[i][col].Color = "red2"
+		}
+	}
+}
+func ColorSimpleCol(grid *Grid, pos struct{ row, col int8 }) {
+	var value = grid.Grid[pos.row][pos.col].Value
+	var row int8
+	ClearColor(grid)
+	for row = 0; row < 9; row++ {
+		if grid.Grid[row][pos.col].Value == 0 {
+			var bloc = FindBlocFromCoordinate(row, pos.col)
+			if IsNumberInBloc(grid, bloc, value) && bloc != FindBlocFromCoordinate(pos.row, pos.col) {
+				ColorBloc(grid, bloc, value)
+			} else {
+				ColorRow(grid, row, value)
+			}
+		}
+	}
+
+}
+func ColorSimpleRow(grid *Grid, pos struct{ row, col int8 }) {
+	var value = grid.Grid[pos.row][pos.col].Value
+	var col int8
+	ClearColor(grid)
+	for col = 0; col < 9; col++ {
+		if grid.Grid[pos.row][col].Value == 0 {
+			var bloc = FindBlocFromCoordinate(pos.row, col)
+			if IsNumberInBloc(grid, bloc, value) && bloc != FindBlocFromCoordinate(pos.row, pos.col) {
+				ColorBloc(grid, bloc, value)
+			} else {
+				ColorCol(grid, col, value)
+			}
+		}
+	}
+}
+
+func ColorSimpleBloc(grid *Grid, pos struct{ row, col int8 }) {
+	var value = grid.Grid[pos.row][pos.col].Value
+	var bloc = FindBlocFromCoordinate(pos.row, pos.col)
+	startRow := 3 * (bloc / 3)
+	startCol := 3 * (bloc % 3)
+	ClearColor(grid)
+	for i := startRow; i <= startRow+2; i++ {
+		for j := startCol; j <= startCol+2; j++ {
+			if grid.Grid[i][j].Value == 0 {
+				if IsNumberInCol(grid, j, value) && j != pos.col {
+					fmt.Printf("YES col %d \n", j)
+					ColorCol(grid, j, value)
+				}
+				if IsNumberInRow(grid, i, value) && i != pos.row {
+					fmt.Printf("YES row %d \n", i)
+					ColorRow(grid, i, value)
+				}
+			}
+
+		}
+	}
 }

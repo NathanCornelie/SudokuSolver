@@ -20,6 +20,6 @@ jobs:
           docker build -t sudoku-front ./front
           docker stop sudoku-front || true
           docker rm sudoku-front || true
-          docker run -d --name sudoku-front -p 3002:3002 sudoku-front
+          docker run -d --name sudoku-front -p 3003:3003 sudoku-front
 
       

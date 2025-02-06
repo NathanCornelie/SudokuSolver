@@ -35,7 +35,7 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 						grid.Grid[row][col].Value = num
 						*numberPlaced = true
 						fmt.Println("Single Naked")
-
+						ColorSingleNakedRow(grid, row, num)
 						solutions = append(solutions, ResponseSolution{Solution{num, row, col, "Single Naked", "row"}, CreateCopy(grid)})
 
 					}
@@ -45,11 +45,13 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 				for num = range manquants {
 					possibles[num] = struct{}{}
 				}
-
+				var toColorCol []int8
+				var toColorBloc []int8
 				// Remove numbers that are already in the block or column
 				for num := range possibles {
 
 					if IsNumberInCol(grid, col, num) {
+						toColorCol = append(toColorCol, num)
 						delete(possibles, num)
 					}
 				}
@@ -58,7 +60,7 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 						grid.Grid[row][col].Value = num
 						*numberPlaced = true
 						fmt.Println("Single Naked")
-
+						ColorSingleNakedCol(grid, struct{ row, col int8 }{row, col}, toColorCol)
 						solutions = append(solutions, ResponseSolution{Solution{num, row, col, "Single Naked", "col"}, CreateCopy(grid)})
 
 					}
@@ -66,6 +68,7 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 					for num := range possibles {
 
 						if IsNumberInBloc(grid, indiceBloc, num) || IsNumberInCol(grid, col, num) {
+							toColorBloc = append(toColorBloc, num)
 							delete(possibles, num)
 						}
 					}
@@ -75,7 +78,7 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 							grid.Grid[row][col].Value = num
 							*numberPlaced = true
 							fmt.Println("Single Naked")
-
+							ColorSingleNakedGlobal(grid, struct{ row, col int8 }{row, col}, toColorBloc, toColorCol)
 							solutions = append(solutions, ResponseSolution{Solution{num, row, col, "Single Naked", ""}, CreateCopy(grid)})
 
 						}
@@ -87,5 +90,3 @@ func FindSingleNaked(grid *Grid, numberPlaced *bool) []ResponseSolution {
 	}
 	return solutions
 }
-
-// Helper functions (isNumberInBlc, isNumberInCol, findBlocFromCoordinate, and placeNumberInGrid) need to be implemented.

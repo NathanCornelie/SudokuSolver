@@ -1,19 +1,19 @@
 <template>
-  <v-card class="container my-7 py-5" style="" scrollable>
+  <v-card class="container my-md-7 py-5 d-flex flex-column justify-end" style="" scrollable>
     <div
-      style="height: 320px"
+     
       class="pa-5 overflow-auto"
       :items="[1]"
       id="solutions-container"
       ref="container-ref"
     >
       <v-row dense>
-        <v-col cols="6" v-for="(sol, i) in Props.solutions">
+        <v-col :cols="width>600?6:12" v-for="(sol, i) in Props.solutions">
           <v-card
             :ref="(ref) => (cardsRef[i] = ref)"
             :id="`h-${i}`"
             :elevation="selectedSolutionIndex == i ? 5 : 0"
-            style="height: 70px"
+           
             :class="[
               'solution',
               ' px-4',
@@ -21,11 +21,11 @@
               selectedSolutionIndex == i ? 'selectedSolution' : '',
             ]"
             @click="$emit('selectSolution', sol, i)"
-            ><h3>{{ sol.solution.method }} <span class="text-grey"> ({{ sol.solution.type }})</span></h3>
-            <p class=" font-weight-bold">
+            ><h3>{{ sol.solution.method }} <span class="text-grey"> {{ sol.solution.type ? `(${sol.solution.type})`:'' }}</span></h3>
+            <p class="font-weight-bold" >
               <span class="mr-2" >row <span class="font-weight-regular">{{ sol.solution.row + 1 }}</span></span
               ><span class="mr-2">col <span class="font-weight-regular">{{ sol.solution.col + 1 }}</span></span
-              ><span>valeur <span class="font-weight-regular">{{ sol.solution.value }}</span></span>
+              ><span>value <span class="font-weight-regular">{{ sol.solution.value }}</span></span>
             </p>
           </v-card>
         </v-col>
@@ -72,7 +72,27 @@ const changeSelectedSolution = (sens: number) => {
     }
   }
 };
+const width = ref(0);
+let height = 0;
 
+onMounted(async () => {
+  await nextTick();
+  updateSize();
+});
+const updateSize = () => {
+  if (window) {
+    width.value = window.innerWidth;
+    height = window.innerHeight;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("resize", updateSize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateSize);
+});
 watch(
   () => Props.selectedSolutionIndex,
   (value) => {
@@ -97,9 +117,17 @@ watch(
 );
 </script>
 
-<style lang="postcss">
+<style >
+
+
+@media (max-width: 600px) {
+h3{
+  font-size:16px;
+}
+}
+
 .container {
-  min-height: 300px;
+  height: 100%;
   width: 80%;
   background-color: #d1c4e9 !important;
 }

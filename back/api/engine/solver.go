@@ -1,6 +1,5 @@
 package engine
 
-
 func InitManquants(grid *Grid, manquant *[9]int8) {
 	finds := [9]int8{0}
 	var i int8

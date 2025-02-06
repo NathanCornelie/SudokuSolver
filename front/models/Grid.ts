@@ -1,10 +1,15 @@
+class Case  {
+  value : number=0 
+  color: string="" 
+}
+
 class Grid {
-  grid: number[][];
-  constructor(grid: number[][] | null = null) {
+  grid: Case[][];
+  constructor(grid: Case[][] | null = null) {
     if (grid) {
       this.grid = grid;
     } else {
-      this.grid = Array.from({ length: 9 }, () => Array(9).fill(0));
+      this.grid = Array.from({ length: 9 }, () => Array(9).fill({color:"",value:0}));
     }
   }
 
@@ -15,8 +20,8 @@ class Grid {
     if (1 > value || value > 9) {
       throw new Error("grid value must be between 1 and 9");
     }
-    this.grid[row][col] = value;
+    this.grid[row][col].value = value;
   }
 }
 
-export default Grid;
+export  {Grid,Case};

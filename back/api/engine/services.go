@@ -106,9 +106,6 @@ func AllMoovesAPI(c *gin.Context) {
 	}
 }
 
-func AllNextMoovesAPI(c *gin.Context) {
-	return
-}
 
 func CheckCustom(c *gin.Context) {
 	var grid Grid

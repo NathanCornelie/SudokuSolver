@@ -320,3 +320,59 @@ func ColorSimpleBloc(grid *Grid, pos struct{ row, col int8 }) {
 		}
 	}
 }
+func ColorSingleNakedRow(grid *Grid, row int8, val int8) {
+	ClearColor(grid)
+	for k := 0; k < 9; k++ {
+		if grid.Grid[row][k].Value != 0 {
+			grid.Grid[row][k].Color = "red1"
+		}
+	}
+}
+
+func ColorSingleNakedCol(grid *Grid, pos struct{ row, col int8 }, toColor []int8) {
+	ClearColor(grid)
+	for k := 0; k < 9; k++ {
+		if grid.Grid[pos.row][k].Value != 0 {
+			grid.Grid[pos.row][k].Color = "red1"
+		}
+
+		for _, v := range toColor {
+			if v == grid.Grid[k][pos.col].Value {
+				grid.Grid[k][pos.col].Color = "red1"
+			}
+		}
+		grid.Grid[pos.row][pos.col].Color = "red1"
+
+	}
+}
+func ColorSingleNakedGlobal(grid *Grid, pos struct{ row, col int8 }, toColorBloc []int8, toColorCol []int8) {
+	ClearColor(grid)
+
+	for k := 0; k < 9; k++ {
+		if grid.Grid[pos.row][k].Value != 0 {
+			grid.Grid[pos.row][k].Color = "red1"
+		}
+
+		for _, v := range toColorCol {
+			fmt.Print(toColorCol, grid.Grid[k][pos.col].Value, toColorBloc, v, pos, "\n")
+			if v == grid.Grid[k][pos.col].Value {
+
+				grid.Grid[k][pos.col].Color = "red1"
+			}
+		}
+	}
+	bloc := FindBlocFromCoordinate(pos.row, pos.col)
+	startRow := 3 * (bloc / 3)
+	startCol := 3 * (bloc % 3)
+
+	for i := startRow; i <= startRow+2; i++ {
+		for j := startCol; j <= startCol+2; j++ {
+			for _, v := range toColorBloc {
+				if v == grid.Grid[i][j].Value {
+					grid.Grid[i][j].Color = "red1"
+				}
+			}
+		}
+
+	}
+}

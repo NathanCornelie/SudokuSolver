@@ -43,9 +43,9 @@ const props = defineProps<{
 const handleClick = (v: number) => {
   emit("handleClick", v);
 };
-</script>
+</script >
 
-<style>
+<style scoped>
 .container {
   height: 400px;
   background-color: #d1c4e9;

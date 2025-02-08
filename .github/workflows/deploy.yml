@@ -23,9 +23,10 @@ jobs:
 
       - name: Build and run Docker api
         run: |
-        
           docker build -t sudoku-api ./back
           docker stop sudoku-api || true
           docker rm sudoku-api || true
           docker run -d --name sudoku-api -p 3004:3004 sudoku-api
+          
+        working-directory: back
 

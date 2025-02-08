@@ -13,7 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
        
-         
       - name: Build and run Docker front
         run: |
         
@@ -22,7 +21,7 @@ jobs:
           docker rm sudoku-front || true
           docker run -d --name sudoku-front -p 3003:3003 sudoku-front
 
-       - name: Build and run Docker container
+      - name: Build and run Docker qpi
         run: |
         
           docker build -t sudoku-api ./back

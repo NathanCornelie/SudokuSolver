@@ -21,7 +21,7 @@ jobs:
           docker rm sudoku-front || true
           docker run -d --name sudoku-front -p 3003:3003 sudoku-front
 
-      - name: Build and run Docker qpi
+      - name: Build and run Docker api
         run: |
         
           docker build -t sudoku-api ./back

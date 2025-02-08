@@ -1,4 +1,4 @@
-FROM golang:1.21 as builder 
+FROM golang:1.23 as builder 
 
 WORKDIR /app  
 
@@ -7,13 +7,13 @@ RUN go mod tidy
 
 COPY . .
 
-RUN go build -o sudoku-api .
+RUN go build -o sudoku-api ./api
 
 FROM alpine:latest
 
 WORKDIR /root/
 
-COPY --from=builder /app/main .
+COPY --from=builder /app/sudoku-api .
 
 
 EXPOSE 3004

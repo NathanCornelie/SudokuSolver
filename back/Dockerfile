@@ -7,7 +7,7 @@ RUN go mod tidy
 
 COPY . .
 
-RUN go build -o sudoku-api ./api
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/sudoku-api ./api
 
 FROM alpine:latest
 

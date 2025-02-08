@@ -15,6 +15,7 @@ WORKDIR /root/
 
 COPY --from=builder /app/sudoku-api .
 
+RUN chmod +x /root/sudoku-api
 
 EXPOSE 3004
 CMD ["./sudoku-api"]

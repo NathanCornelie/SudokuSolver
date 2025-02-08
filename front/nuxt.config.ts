@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["vuetify-nuxt-module", "nuxt-mdi"],
   appConfig: {
-    //apiURL: "http://141.98.153.77/api/solver",
-    apiURL: "http://localhost:8081/api/solver",
+    apiURL: "http://141.98.153.77/api/solver",
+    //apiURL: "http://localhost:8081/api/solver",
   },
 });

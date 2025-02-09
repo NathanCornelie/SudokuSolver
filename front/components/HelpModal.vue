@@ -3,7 +3,7 @@
     <v-btn @click="display = !display">
       <MdiIcon icon="mdiHelp" size="20" />
     </v-btn>
-    <v-card class="mt-2" v-if="display" max-width="300px">
+    <v-card class="mt-2 content" v-if="display" max-width="300px" @click="display = !display" >
       <v-card-text>
         <div v-if="props.isEdit" class="help_edit">
           <p class="py-2 "><span><MdiIcon icon="mdiHelp" class="mr-1"/></span>Select one of the numbers on the numeric keypad and click on the cell to enter the value.</p>
@@ -56,11 +56,15 @@ const content = ref<{ title: string; content: string }[]>([
     content: "Retrieve all moves to complete the grid.",
   },
 ]);
-</script>
+</script >
 
-<style >
+<style scoped>
 .tooltip {
   background-color: red;
+}
+.content{
+  position: absolute;
+  z-index: 1111110;
 }
 
 </style>

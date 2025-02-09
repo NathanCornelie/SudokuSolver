@@ -1,21 +1,22 @@
 <template>
   <v-card
     variant="flat"
-    class="bg-transparent py-sm-7 d-flex flex-column align-center justify-space-between w-100 h-100"
+    class="bg-transparent py-2 py-sm-7 d-flex flex-column align-center justify-space-between w-100 h-100"
   >
-    <div style="width: fit-content" class="my-5">
+    <div style="width: fit-content" class="my-2 my-sm-5">
       <div class="mb-5 d-flex align-center justify-center">
         <div v-if="isEditMode" class="w-50 d-flex justify-space-between">
           <v-btn @click="cancelEdit()" color="red"
-            ><MdiIcon icon="mdiWindowClose" size="30" />Cancel</v-btn
+            ><MdiIcon icon="mdiWindowClose" :size="width>600?'30':'20'" />Cancel</v-btn
           >
           <v-btn @click="saveEdit()"
-            ><MdiIcon icon="mdiContentSave" size="30" />Save</v-btn
+            ><MdiIcon icon="mdiContentSave" :size="width>600?'30':'20'" />Save</v-btn
           >
         </div>
         <div v-else class="w-100 d-flex align-center justify-space-around">
           <v-btn @Click="goToEdit()">Edit Mode</v-btn>
           <v-btn @Click="resetGrid()">Reset Grid</v-btn>
+          <HelpModal v-if="width<=600" :isEdit="isEditMode" />
         </div>
       </div>
       <v-card class="mb-5 d-flex align-center">
@@ -88,7 +89,7 @@
     />
   </v-card>
 
-  <div id="help" class="help_button">
+  <div v-if="width>600" id="help" class="help_button">
     <HelpModal :isEdit="isEditMode" />
   </div>
 </template>

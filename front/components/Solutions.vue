@@ -1,8 +1,8 @@
 <template>
-  <v-card class="container my-md-7 py-5 d-flex flex-column justify-end" style="" scrollable>
+  <v-card class="container my-sm-7 py-sm-2 d-flex flex-column justify-end" style="" scrollable>
     <div
      
-      class="pa-5 overflow-auto"
+      class="pa-2 overflow-auto"
       :items="[1]"
       id="solutions-container"
       ref="container-ref"
@@ -32,7 +32,7 @@
       </v-row>
     </div>
 
-    <div class="w-100 d-flex justify-center ga-3 mt-3">
+    <div v-if="width>600" class="w-100 d-flex justify-center ga-3 mt-3">
       <v-btn @click="changeSelectedSolution(-1)"
         ><MdiIcon icon="mdiArrowLeft" size="30" />
       </v-btn>
@@ -117,7 +117,7 @@ watch(
 );
 </script>
 
-<style >
+<style scopped >
 
 
 @media (max-width: 600px) {
@@ -129,6 +129,7 @@ h3{
 .container {
   height: 100%;
   width: 80%;
+  margin-bottom: 20px;
   background-color: #d1c4e9 !important;
 }
 .solution {

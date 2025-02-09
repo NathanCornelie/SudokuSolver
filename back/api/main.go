@@ -18,6 +18,6 @@ func main() {
 	router.POST("/api/solver/getallsolutions", engine.AllMoovesAPI)
 	router.POST("/api/solver/check_grid", engine.CheckCustom)
 
-	router.Run("localhost:8081")
+	router.Run("localhost:3004")
 
 }
